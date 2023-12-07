@@ -6,6 +6,7 @@ import com.fase4FIAP.streaming.video.useCases.VideoCasoDeUso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.awt.print.Pageable;
 import java.time.LocalDate;
@@ -28,6 +29,11 @@ public class VideoService implements VideoCasoDeUso {
     @Override
     public Flux<Video> getVideoPorDataPublicacao(LocalDate data, Pageable pageable) {
         return repositorioVideo.findByDataPublicacao(data, pageable);
+    }
+
+    @Override
+    public Mono<Video> cadastrarVideo(Video video) {
+        return repositorioVideo.save(video);
     }
 
 

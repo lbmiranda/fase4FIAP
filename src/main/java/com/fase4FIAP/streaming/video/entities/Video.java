@@ -14,11 +14,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document
+@Document(collection = "Streaming")
 public class Video {
 
     @Id
-    private Long id;
+    private Integer id;
     @Indexed
     private String titulo;
     private String descricao;

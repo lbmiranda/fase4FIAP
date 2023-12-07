@@ -5,11 +5,11 @@ import com.fase4FIAP.streaming.video.useCases.VideoCasoDeUso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.awt.print.Pageable;
 import java.time.LocalDate;
@@ -23,6 +23,13 @@ public class VideoController {
     @Autowired
     public VideoController (VideoCasoDeUso videoCasoDeUso) {
         this.videoCasoDeUso = videoCasoDeUso;
+    }
+
+    @PostMapping
+    public Mono<ResponseEntity<Video>> cadastrarVideo(@RequestBody Video video) {
+        return videoCasoDeUso.cadastrarVideo(video)
+                .map(savedVideo -> ResponseEntity.status(HttpStatus.CREATED).body(savedVideo))
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @GetMapping("/busca/titulo")
