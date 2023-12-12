@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming Videos - FIAP fase 4</title>
+</head>
+<body>
+
+<h1>FIAP Fase 4 - streaming</h1>
+
+<!-- Video Upload Form -->
+<form id="uploadForm" enctype="multipart/form-data">
+    <label for="videoFile">Selecione um vídeo para carregar:</label>
+    <input type="file" id="videoFile" name="arquivo" accept="video/*" required>
+    <br>
+    <label for="fileName">Nome do arquivo:</label>
+    <input type="text" id="fileName" name="nomeArquivo" required>
+    <br>
+    <button type="button" onclick="uploadVideo()">Upload Video</button>
+</form>
+
+<hr>
+
+<!-- Video Player -->
+<h2>Play Video</h2>
+<video id="videoPlayer" width="640" height="360" controls>
+    Your browser does not support the video tag.
+</video>
+
+<!-- List of All Videos -->
+<h2>Todos os videos</h2>
+<ul>
+    <li th:each="video : ${videos}">
+        <p>
+            <a th:href="@{/play/{videoId}(videoId=${video.videoId})}" th:text="${video.nomeArquivo}"></a>
+        </p>
+    </li>
+</ul>
+
+
+<hr>
+
+<script>
+    function uploadVideo() {
+        const form = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('videoFile');
+        const fileNameInput = document.getElementById('fileName');
+
+        const formData = new FormData(form);
+
+        fetch('/videos', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Video uploaded:', data);
+
+        })
+        .catch(error => console.error('Error uploading video:', error));
+    }
+</script>
+
+</body>
+</html>
+
