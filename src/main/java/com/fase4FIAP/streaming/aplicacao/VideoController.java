@@ -6,12 +6,15 @@ import com.fase4FIAP.streaming.dominio.VideoModelo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@RestController
+import java.util.List;
+
+@Controller
 @RequestMapping("/videos")
 public class VideoController {
 
@@ -31,7 +34,10 @@ public class VideoController {
         }
 
         @GetMapping("/")
-        public String home() {
+        public String home(Model model) {
+            List<VideoModelo> videos = servicoVideo.getAllVideos().collectList().block();
+            model.addAttribute("videos", videos);
+            System.out.println(videos);
             return "index";
         }
 
@@ -42,7 +48,7 @@ public class VideoController {
                     .defaultIfEmpty(ResponseEntity.notFound().build());
         }
 
-        @GetMapping("/videos")
+        @GetMapping("/list")
         public String getAllVideos(Model model) {
             Flux<VideoModelo> videos = servicoVideo.getAllVideos();
             model.addAttribute("videos", videos);

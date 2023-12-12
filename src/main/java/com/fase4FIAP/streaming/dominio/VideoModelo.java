@@ -31,5 +31,21 @@ public class VideoModelo {
         private Boolean favorito;
 
         public VideoModelo(byte[] videoData, String nomeArquivo) {
+                this.videoData = videoData;
+                this.nomeArquivo = nomeArquivo;
+        }
+
+        @Override
+        public String toString() {
+                return "VideoModelo{" +
+                        "videoId=" + videoId +
+                        ", titulo='" + titulo + '\'' +
+                        ", descricao='" + descricao + '\'' +
+                        ", url='" + url + '\'' +
+                        ", nomeArquivo='" + nomeArquivo + '\'' +
+                        ", dataPublicacao=" + dataPublicacao +
+                        ", categoria=" + categoria +
+                        ", favorito=" + favorito +
+                        '}';
         }
 }

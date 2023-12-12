@@ -33,7 +33,7 @@
 <ul>
     <li th:each="video : ${videos}">
         <p>
-            <a th:href="@{/play/{videoId}(videoId=${video.videoId})}" th:text="${video.nomeArquivo}"></a>
+            <a th:href="@{/videos/play/{videoId}(videoId=${video.videoId})}" th:text="${video.nomeArquivo}"></a>
         </p>
     </li>
 </ul>
@@ -56,7 +56,7 @@
         .then(response => response.json())
         .then(data => {
             console.log('Video uploaded:', data);
-
+            window.location.reload();
         })
         .catch(error => console.error('Error uploading video:', error));
     }
