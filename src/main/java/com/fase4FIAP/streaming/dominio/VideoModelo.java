@@ -3,7 +3,6 @@ package com.fase4FIAP.streaming.dominio;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -33,6 +32,9 @@ public class VideoModelo {
     public static VideoModelo of(byte[] videoData, VideoModeloRequest request) {
         var response = new VideoModelo();
         response.setVideoData(videoData);
+        response.setDataPublicacao(LocalDate.parse(request.getDataPublicacao()));
+        response.setCategoria(Categoria.fromString(request.getCategoria()));
+        response.setFavorito("true".equals(request.getFavorito()));
         copyProperties(request, response);
         return response;
     }
