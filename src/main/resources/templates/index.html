@@ -100,7 +100,7 @@
                     videoLink.textContent = video.nomeArquivo;
                     videoLink.onclick = function(event) {
                         event.preventDefault(); // Prevent default link behavior
-                        playVideo(`/videos/play/${video.nomeArquivo}`); // Call playVideo with the correct URL
+                        playVideo(`/videos/play/${video.videoId}`); // Call playVideo with the correct URL
                     };
                     videoItem.appendChild(videoLink);
                     videoList.appendChild(videoItem);

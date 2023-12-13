@@ -19,7 +19,7 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 public class VideoModelo {
 
     @Id
-    private ObjectId videoId;
+    private String videoId;
     @Indexed
     private String titulo;
     private String descricao;

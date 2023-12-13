@@ -26,7 +26,7 @@ public class ServicoVideo implements StreamingVideo {
 
     @Override
     public Mono<byte[]> getVideoContent(String videoId) {
-        return videoRepositorio.findByNomeArquivo(videoId).map(VideoModelo::getVideoData);
+        return videoRepositorio.findById(videoId).map(VideoModelo::getVideoData);
     }
 
     @Override

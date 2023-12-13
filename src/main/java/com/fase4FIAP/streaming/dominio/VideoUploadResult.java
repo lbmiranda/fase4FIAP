@@ -9,5 +9,5 @@ import org.bson.types.ObjectId;
 public class VideoUploadResult {
 
     private final boolean success;
-    private final ObjectId videoId;
+    private final String videoId;
 }
