@@ -17,6 +17,13 @@
     <label for="fileName">Nome do arquivo:</label>
     <input type="text" id="fileName" name="nomeArquivo" required>
     <br>
+    <label for="titulo">Título:</label>
+    <input type="text" id="titulo" name="titulo">
+    <br>
+    <label for="descricao">Descrição:</label>
+    <input type="text" id="descricao" name="descricao">
+    <br>
+    <!-- Add other fields for dataPublicacao, categoria, favorito -->
     <button type="button" onclick="uploadVideo()">Upload Video</button>
 </form>
 
@@ -30,7 +37,7 @@
 
 <!-- List of All Videos -->
 <h2>Todos os videos</h2>
-<ul>
+<ul id="videoList">
     <li th:each="video : ${videos}">
         <p>
             <a th:href="@{/videos/play/{videoId}(videoId=${video.videoId})}" th:text="${video.nomeArquivo}"></a>
@@ -38,16 +45,26 @@
     </li>
 </ul>
 
-
 <hr>
 
 <script>
     function uploadVideo() {
         const form = document.getElementById('uploadForm');
-        const fileInput = document.getElementById('videoFile');
-        const fileNameInput = document.getElementById('fileName');
-
         const formData = new FormData(form);
+
+        const request = {
+            nomeArquivo: formData.get('nomeArquivo'),
+            titulo: formData.get('titulo'),
+            descricao: formData.get('descricao'),
+            // Populate other properties from formData
+        };
+
+        formData.delete('nomeArquivo');
+        formData.delete('titulo');
+        formData.delete('descricao');
+        // Remove other fields as well
+
+        formData.append('request', new Blob([JSON.stringify(request)], { type: "application/json" }));
 
         fetch('/videos', {
             method: 'POST',
@@ -60,8 +77,40 @@
         })
         .catch(error => console.error('Error uploading video:', error));
     }
+
+    function playVideo(videoUrl) {
+        const videoPlayer = document.getElementById('videoPlayer');
+        videoPlayer.src = videoUrl;
+        videoPlayer.load(); // Load the new video source
+        videoPlayer.play().catch(e => console.error("Error playing video:", e)); // Log any errors during play
+    }
+
+    // Function to fetch and display videos
+    function fetchAndDisplayVideos() {
+        fetch('/videos')
+            .then(response => response.json())
+            .then(videos => {
+                const videoList = document.getElementById('videoList');
+                videoList.innerHTML = '';
+
+                videos.forEach(video => {
+                    const videoItem = document.createElement('li');
+                    const videoLink = document.createElement('a');
+                    videoLink.href = `#`; // Set href to '#' to make it clickable
+                    videoLink.textContent = video.nomeArquivo;
+                    videoLink.onclick = function(event) {
+                        event.preventDefault(); // Prevent default link behavior
+                        playVideo(`/videos/play/${video.nomeArquivo}`); // Call playVideo with the correct URL
+                    };
+                    videoItem.appendChild(videoLink);
+                    videoList.appendChild(videoItem);
+                });
+            })
+            .catch(error => console.error('Error fetching videos:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchAndDisplayVideos);
 </script>
 
 </body>
 </html>
-
