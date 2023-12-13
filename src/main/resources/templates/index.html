@@ -4,6 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Streaming Videos - FIAP fase 4</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+        }
+        h1, h2 {
+            color: #444;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #5cb85c;
+            color: white;
+            border: 0;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #4cae4c;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .videoPlayer {
+            width: 100%;
+            max-width: 640px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 
@@ -38,23 +104,20 @@
     <button type="button" onclick="uploadVideo()">Upload Video</button>
 </form>
 
-<hr>
+    <hr>
 
-<h2>Play Video</h2>
-<video id="videoPlayer" width="640" height="360" controls>
-    Your browser does not support the video tag.
-</video>
+    <h2>Play Video</h2>
+    <video id="videoPlayer" class="videoPlayer" controls>
+        Seu navegador não suporta a tag de vídeo.
+    </video>
 
-<h2>Todos os videos</h2>
-<ul id="videoList">
-    <li th:each="video : ${videos}">
-        <p>
+    <h2>Todos os vídeos</h2>
+    <ul id="videoList">
+        <li th:each="video : ${videos}">
             <a th:href="@{/videos/play/{videoId}(videoId=${video.videoId})}" th:text="${video.nomeArquivo}"></a>
-        </p>
-    </li>
-</ul>
-
-<hr>
+        </li>
+    </ul>
+</div>
 
 <script>
     function uploadVideo() {
