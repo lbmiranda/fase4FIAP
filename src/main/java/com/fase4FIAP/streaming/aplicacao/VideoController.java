@@ -1,6 +1,7 @@
 package com.fase4FIAP.streaming.aplicacao;
 
 import com.fase4FIAP.streaming.casoDeUso.ServicoVideo;
+import com.fase4FIAP.streaming.dominio.Categoria;
 import com.fase4FIAP.streaming.dominio.VideoModelo;
 import com.fase4FIAP.streaming.dominio.VideoModeloRequest;
 import lombok.RequiredArgsConstructor;
@@ -42,4 +43,10 @@ public class VideoController {
     public Flux<VideoModelo> getAllVideos() {
         return servicoVideo.getAllVideos();
     }
+
+    @ModelAttribute("categorias")
+    public Categoria[] getCategorias() {
+        return Categoria.values();
+    }
+
 }
