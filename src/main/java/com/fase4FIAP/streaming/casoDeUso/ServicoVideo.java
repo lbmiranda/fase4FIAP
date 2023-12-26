@@ -1,9 +1,6 @@
 package com.fase4FIAP.streaming.casoDeUso;
 
-import com.fase4FIAP.streaming.dominio.VideoModelo;
-import com.fase4FIAP.streaming.dominio.VideoModeloRequest;
-import com.fase4FIAP.streaming.dominio.VideoRepositorio;
-import com.fase4FIAP.streaming.dominio.VideoUploadResult;
+import com.fase4FIAP.streaming.dominio.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,4 +30,15 @@ public class ServicoVideo implements StreamingVideo {
     public Flux<VideoModelo> getAllVideos() {
         return videoRepositorio.findAll();
     }
+
+    @Override
+    public Mono<VideoDeleteResult> deleteVideo(String videoId) {
+
+        return videoRepositorio.findById(videoId)
+                .flatMap(existingVideo -> videoRepositorio.deleteById(videoId)
+                        .thenReturn(VideoDeleteResult.success()))
+                .switchIfEmpty(Mono.just(VideoDeleteResult.failure()));
+    }
+
+
 }

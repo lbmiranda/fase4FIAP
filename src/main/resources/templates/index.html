@@ -286,16 +286,19 @@
     }
 
     function deleteVideo(videoId) {
-            fetch(`/videos/delete/${videoId}`, {
-                method: 'DELETE',
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Video deleted:', data);
+        fetch(`/videos/deletar/${videoId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Video deletado com sucesso');
                 fetchAndDisplayVideos();
-            })
-            .catch(error => console.error('Erro ao deletar video:', error));
-        }
+            } else {
+                console.error('Falha ao deletar o video:', response.statusText);
+            }
+        })
+        .catch(error => console.error('Erro ao deletar video:', error));
+    }
 
     function applyFilters() {
         const categoriaFilter = document.getElementById('categoriaFilter').value;
