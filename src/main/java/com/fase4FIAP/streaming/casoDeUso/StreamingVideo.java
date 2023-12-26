@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 public interface StreamingVideo {
 
     Mono<VideoUploadResult> uploadVideo(MultipartFile arquivo, VideoModeloRequest request);
@@ -17,6 +19,8 @@ public interface StreamingVideo {
     Flux<VideoModelo> getAllVideos();
 
     Mono<VideoDeleteResult> deleteVideo(String videoId);
+
+    Flux<VideoModelo> buscaVideoPorTitulo(String query);
 
 
 }

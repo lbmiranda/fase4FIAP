@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ServicoVideo implements StreamingVideo {
@@ -38,6 +40,11 @@ public class ServicoVideo implements StreamingVideo {
                 .flatMap(existingVideo -> videoRepositorio.deleteById(videoId)
                         .thenReturn(VideoDeleteResult.success()))
                 .switchIfEmpty(Mono.just(VideoDeleteResult.failure()));
+    }
+
+    @Override
+    public Flux<VideoModelo> buscaVideoPorTitulo (String query) {
+        return videoRepositorio.findByTituloContainingIgnoreCase(query);
     }
 
 

@@ -118,54 +118,60 @@
         Seu navegador não suporta a tag de vídeo.
     </video>
 
+    <div class="mb-3">
+        <label for="searchQuery">Buscar vídeos por título:</label>
+        <input type="text" id="searchQuery" class="form-control">
+        <button type="button" onclick="buscarVideoPorTitulo()" class="btn btn-primary">Buscar</button>
+    </div>
+
     <h2 class="mb-4">Todos os vídeos</h2>
 
-        <div class='container'>
-                <div class="mb-3">
-                    <label for="categoriaFilter">Categoria:</label>
-                    <select id="categoriaFilter" onchange="applyFilters()">
-                        <option value="">Todas</option>
-                        <option th:each="categoria : ${T(com.fase4FIAP.streaming.dominio.Categoria).values()}" th:value="${categoria}" th:text="${categoria.getNomeCategoria()}"></option>
-                    </select>
+    <div class='container'>
+        <div class="mb-3">
+            <label for="categoriaFilter">Categoria:</label>
+            <select id="categoriaFilter" onchange="applyFilters()">
+                <option value="">Todas</option>
+                <option th:each="categoria : ${T(com.fase4FIAP.streaming.dominio.Categoria).values()}"
+                        th:value="${categoria}" th:text="${categoria.getNomeCategoria()}"></option>
+            </select>
 
 
-                    <label for="favoritoFilter">Favorito:</label>
-                    <select id="favoritoFilter" onchange="applyFilters()">
-                        <option value="">Todos</option>
-                        <option value="true">Sim</option>
-                        <option value="false">Não</option>
-                    </select>
-                </div>
-
-
-
-                <table class='table table-striped table-hover'>
-                <thead>
-                <tr>
-                    <th>Titulo</th>
-                    <th>Descrição</th>
-                    <th>Data de publicação</th>
-                    <th>Categoria</th>
-                    <th>Favorito</th>
-                    <th>Deletar</th>
-                </tr>
-                </thead>
-                <tbody id="videoList">
-                <tr th:each="video : ${videos}">
-                    <td><a th:href="@{/videos/play/{videoId}(videoId=${video.videoId})}" th:text="${video.titulo}"></a></td>
-                    <td th:text="${video.descricao}"></td>
-                    <td th:text="${video.dataPublicacao}"></td>
-                    <td th:text="${video.categoria}"></td>
-                    <td th:text="${video.favorito}"></td>
-                    <td>
-                        <button type="button" onclick="deleteVideo('${video.videoId}')" class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash"></i> Deletar
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <label for="favoritoFilter">Favorito:</label>
+            <select id="favoritoFilter" onchange="applyFilters()">
+                <option value="">Todos</option>
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+            </select>
         </div>
+
+
+        <table class='table table-striped table-hover'>
+            <thead>
+            <tr>
+                <th>Titulo</th>
+                <th>Descrição</th>
+                <th>Data de publicação</th>
+                <th>Categoria</th>
+                <th>Favorito</th>
+                <th>Deletar</th>
+            </tr>
+            </thead>
+            <tbody id="videoList">
+            <tr th:each="video : ${videos}">
+                <td><a th:href="@{/videos/play/{videoId}(videoId=${video.videoId})}" th:text="${video.titulo}"></a></td>
+                <td th:text="${video.descricao}"></td>
+                <td th:text="${video.dataPublicacao}"></td>
+                <td th:text="${video.categoria}"></td>
+                <td th:text="${video.favorito}"></td>
+                <td>
+                    <button type="button" onclick="deleteVideo('${video.videoId}')" class="btn btn-danger btn-sm">
+                        <i class="fa fa-trash"></i> Deletar
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 
@@ -317,6 +323,22 @@
                 });
             })
         .catch(error => console.error('Error fetching and applying filters:', error));
+    }
+
+    function buscarVideoPorTitulo() {
+        const searchQuery = document.getElementById('searchQuery').value;
+
+        fetch(`/videos/buscar?query=${searchQuery}`)
+            .then(response => response.json())
+            .then(videos => {
+                const videoList = document.getElementById('videoList');
+                videoList.innerHTML = '';
+
+                videos.forEach(video => {
+                    createAndAppendVideoRow(video, videoList);
+                });
+            })
+        .catch(error => console.error('Erro ao buscar vídeo:', error));
     }
 
 

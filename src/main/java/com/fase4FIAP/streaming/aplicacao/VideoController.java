@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/videos")
@@ -44,6 +46,13 @@ public class VideoController {
         return servicoVideo.getAllVideos();
     }
 
+    @GetMapping("/buscar")
+    public ResponseEntity<Flux<VideoModelo>> buscarVideosPorTitulo(@RequestParam (required = false) String query) {
+        Flux<VideoModelo> videos = servicoVideo.buscaVideoPorTitulo(query);
+        return ResponseEntity.ok(videos);
+    }
+
+
     @ModelAttribute("categorias")
     public Categoria[] getCategorias() {
         return Categoria.values();
@@ -60,5 +69,7 @@ public class VideoController {
                     }
                 });
     }
+
+
 
 }
