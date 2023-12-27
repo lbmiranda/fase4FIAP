@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Recomendações de Vídeo</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h1>Recomendações de Vídeo</h1>
+    <input type="text" id="usuarioId" class="form-control mb-2" placeholder="Digite o ID do usuário para recomendações">
+    <button onclick="fetchRecommendations()" class="btn btn-primary mb-3">Obter Recomendações</button>
+    <div id="recommendations" class="row"></div>
+</div>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    function fetchRecommendations() {
+        const usuarioId = document.getElementById('usuarioId').value;
+        if (!usuarioId) {
+            alert('Por favor, insira o ID do usuário.');
+            return;
+        }
+
+        fetch('/video-recommendation?usuarioId=' + usuarioId)
+            .then(response => response.json())
+            .then(videos => {
+                const recommendationsDiv = document.getElementById('recommendations');
+                recommendationsDiv.innerHTML = ''; // Limpa recomendações anteriores
+
+                if (videos.length === 0) {
+                    // Se não houver vídeos, mostra uma mensagem.
+                    recommendationsDiv.innerHTML = '<div class="alert alert-info" role="alert">Usuario ainda não favoritou nenhum vídeo para receber recomendações!</div>';
+                } else {
+                    // Caso contrário, mostra os vídeos recomendados.
+                    videos.forEach(video => {
+                        const videoDiv = document.createElement('div');
+                        videoDiv.className = 'col-md-4 mb-3';
+                        videoDiv.innerHTML = `
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">${video.titulo}</h5>
+                                    <p class="card-text">${video.descricao}</p>
+                                    <p class="card-text"><small class="text-muted">Publicado em: ${video.dataPublicacao}</small></p>
+                                </div>
+                            </div>
+                        `;
+                        recommendationsDiv.appendChild(videoDiv);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar recomendações:', error);
+                alert('Erro ao buscar recomendações. Verifique o console para mais detalhes.');
+            });
+    }
+</script>
+
+</body>
+</html>

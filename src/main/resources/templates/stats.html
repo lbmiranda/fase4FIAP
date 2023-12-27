@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Estatísticas dos Vídeos</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h1>Estatísticas dos Vídeos</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Resumo</h5>
+            <p class="card-text">Total de Vídeos: <span id="totalVideos">Carregando...</span></p>
+            <p class="card-text">Total de Favoritos: <span id="totalFavoritos">Carregando...</span></p>
+            <p class="card-text">Média de Visualizações: <span id="mediaVisualizacoes">Carregando...</span></p>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/estatisticas')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('totalVideos').textContent = data.totalVideos;
+                document.getElementById('totalFavoritos').textContent = data.totalFavoritos;
+                document.getElementById('mediaVisualizacoes').textContent = data.mediaVisualizacoes.toFixed(2);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar estatísticas:', error);
+            });
+    });
+</script>
+
+</body>
+</html>

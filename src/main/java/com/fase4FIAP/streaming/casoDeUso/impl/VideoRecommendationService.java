@@ -20,7 +20,7 @@ public class VideoRecommendationService implements IVideoRecommendationService {
 
     @Override
     public List<Video> recommendVideos(String usuarioId) {
-        Map<Categoria, Long> categoriasFavoritas = getCategoriasFavoritas(usuarioId);
+        var categoriasFavoritas = getCategoriasFavoritas(usuarioId);
 
         var categoriasOrdenadas = categoriasFavoritas.entrySet()
                 .stream()
