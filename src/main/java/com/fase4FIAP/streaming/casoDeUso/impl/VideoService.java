@@ -1,12 +1,12 @@
 package com.fase4FIAP.streaming.casoDeUso.impl;
 
+import com.fase4FIAP.streaming.aplicacao.exceptions.NotFoundException;
 import com.fase4FIAP.streaming.casoDeUso.contract.IVideoService;
 import com.fase4FIAP.streaming.dominio.dto.request.VideoRequest;
 import com.fase4FIAP.streaming.dominio.dto.response.VideoFavoritoResponse;
 import com.fase4FIAP.streaming.dominio.dto.response.VideoUploadResponse;
 import com.fase4FIAP.streaming.dominio.enums.Categoria;
 import com.fase4FIAP.streaming.dominio.model.Video;
-import com.fase4FIAP.streaming.dominio.model.VideoFavorito;
 import com.fase4FIAP.streaming.dominio.repository.VideoRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +33,14 @@ public class VideoService implements IVideoService {
 
     @Override
     public Mono<byte[]> getVideoContent(String videoId) {
-        return videoRepositorio.findById(videoId).map(Video::getVideoData);
+        return videoRepositorio.findById(videoId)
+                .flatMap(video -> {
+                    video.incrementaView();
+                    return videoRepositorio.save(video)
+                            .thenReturn(video);
+                })
+                .map(Video::getVideoData)
+                .switchIfEmpty(Mono.error(new NotFoundException("Vídeo não encontrado com ID: " + videoId)));
     }
 
     @Override
@@ -56,6 +62,6 @@ public class VideoService implements IVideoService {
         return videoRepositorio.findByCategoria(categoria)
                 .toStream()
                 .filter(video -> !idsFavoritos.contains(video.getVideoId()))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

@@ -30,6 +30,7 @@ public class Video {
     private LocalDate dataPublicacao;
     private Categoria categoria;
     private Boolean favorito;
+    private long view;
 
     public static Video of(byte[] videoData, VideoRequest request) {
         var response = new Video();
@@ -39,5 +40,9 @@ public class Video {
         response.setFavorito("true".equals(request.getFavorito()));
         copyProperties(request, response);
         return response;
+    }
+
+    public void incrementaView() {
+        this.view += 1;
     }
 }

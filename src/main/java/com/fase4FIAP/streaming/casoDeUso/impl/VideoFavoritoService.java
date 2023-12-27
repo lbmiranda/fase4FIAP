@@ -33,6 +33,14 @@ public class VideoFavoritoService implements IVideoFavoritoService {
     }
 
     @Override
+    public List<VideoFavoritoResponse> getAll() {
+        return videoFavoritoRepositorio.findAll()
+                .stream()
+                .map(VideoFavoritoResponse::of)
+                .toList();
+    }
+
+    @Override
     public void delete(String id) {
         findById(id);
         videoFavoritoRepositorio.deleteById(id);
