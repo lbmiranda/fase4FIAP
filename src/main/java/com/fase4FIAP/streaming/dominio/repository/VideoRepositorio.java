@@ -8,7 +8,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Repository
 public interface VideoRepositorio extends ReactiveCrudRepository<Video, String> {
@@ -16,8 +15,6 @@ public interface VideoRepositorio extends ReactiveCrudRepository<Video, String> 
     Flux<Video> findByTituloContaining(String titulo);
 
     Flux<Video> findByDataPublicacao(LocalDate data);
-
-    Flux<Video> findAll();
 
     Mono<Video> findByNomeArquivo(String videoId);
 

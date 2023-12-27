@@ -1,9 +1,9 @@
 package com.fase4FIAP.streaming.aplicacao.controller;
 
 import com.fase4FIAP.streaming.casoDeUso.impl.VideoService;
+import com.fase4FIAP.streaming.dominio.dto.request.VideoRequest;
 import com.fase4FIAP.streaming.dominio.enums.Categoria;
 import com.fase4FIAP.streaming.dominio.model.Video;
-import com.fase4FIAP.streaming.dominio.dto.request.VideoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
