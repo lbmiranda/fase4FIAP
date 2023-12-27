@@ -3,6 +3,7 @@ package com.fase4FIAP.streaming.aplicacao.controller;
 import com.fase4FIAP.streaming.casoDeUso.impl.UsuarioService;
 import com.fase4FIAP.streaming.dominio.dto.request.UsuarioRequest;
 import com.fase4FIAP.streaming.dominio.dto.response.UsuarioResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class UsuarioController {
     private final UsuarioService service;
 
     @PostMapping
-    public UsuarioResponse create(@RequestBody UsuarioRequest request) {
+    public UsuarioResponse create(@RequestBody @Valid UsuarioRequest request) {
         return service.create(request);
     }
 
@@ -31,7 +32,7 @@ public class UsuarioController {
     }
 
     @PutMapping("{id}")
-    public UsuarioResponse update(@PathVariable String id, @RequestBody UsuarioRequest request) {
+    public UsuarioResponse update(@PathVariable String id, @RequestBody @Valid UsuarioRequest request) {
         return service.update(id, request);
     }
 
