@@ -1,5 +1,7 @@
-package com.fase4FIAP.streaming.dominio;
+package com.fase4FIAP.streaming.dominio.model;
 
+import com.fase4FIAP.streaming.dominio.dto.request.VideoRequest;
+import com.fase4FIAP.streaming.dominio.enums.Categoria;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,7 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "Streaming")
-public class VideoModelo {
+public class Video {
 
     @Id
     private String videoId;
@@ -29,8 +31,8 @@ public class VideoModelo {
     private Categoria categoria;
     private Boolean favorito;
 
-    public static VideoModelo of(byte[] videoData, VideoModeloRequest request) {
-        var response = new VideoModelo();
+    public static Video of(byte[] videoData, VideoRequest request) {
+        var response = new Video();
         response.setVideoData(videoData);
         response.setDataPublicacao(LocalDate.parse(request.getDataPublicacao()));
         response.setCategoria(Categoria.fromString(request.getCategoria()));

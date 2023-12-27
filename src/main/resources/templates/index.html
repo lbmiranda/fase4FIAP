@@ -125,7 +125,8 @@
                     <label for="categoriaFilter">Categoria:</label>
                     <select id="categoriaFilter" onchange="applyFilters()">
                         <option value="">Todas</option>
-                        <option th:each="categoria : ${T(com.fase4FIAP.streaming.dominio.Categoria).values()}" th:value="${categoria}" th:text="${categoria.getNomeCategoria()}"></option>
+                        <option th:each="categoria : ${T(com.fase4FIAP.streaming.dominio.enums.Categoria).values()}"
+                                th:value="${categoria}" th:text="${categoria.getNomeCategoria()}"></option>
                     </select>
 
 

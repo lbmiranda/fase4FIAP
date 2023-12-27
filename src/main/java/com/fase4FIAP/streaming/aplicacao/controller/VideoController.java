@@ -1,9 +1,9 @@
-package com.fase4FIAP.streaming.aplicacao;
+package com.fase4FIAP.streaming.aplicacao.controller;
 
-import com.fase4FIAP.streaming.casoDeUso.ServicoVideo;
-import com.fase4FIAP.streaming.dominio.Categoria;
-import com.fase4FIAP.streaming.dominio.VideoModelo;
-import com.fase4FIAP.streaming.dominio.VideoModeloRequest;
+import com.fase4FIAP.streaming.casoDeUso.impl.VideoService;
+import com.fase4FIAP.streaming.dominio.enums.Categoria;
+import com.fase4FIAP.streaming.dominio.model.Video;
+import com.fase4FIAP.streaming.dominio.dto.request.VideoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,11 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/videos")
 public class VideoController {
 
-    private final ServicoVideo servicoVideo;
+    private final VideoService servicoVideo;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Mono<ResponseEntity<String>> uploadVideo(@RequestPart MultipartFile arquivo,
-                                                    @RequestPart VideoModeloRequest request) {
+                                                    @RequestPart VideoRequest request) {
         return servicoVideo.uploadVideo(arquivo, request)
                 .map(result -> {
                     if (result.isSuccess()) {
@@ -40,7 +40,7 @@ public class VideoController {
     }
 
     @GetMapping
-    public Flux<VideoModelo> getAllVideos() {
+    public Flux<Video> getAllVideos() {
         return servicoVideo.getAllVideos();
     }
 

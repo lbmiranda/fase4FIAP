@@ -1,4 +1,4 @@
-package com.fase4FIAP.streaming.dominio;
+package com.fase4FIAP.streaming.dominio.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VideoModeloRequest {
+public class VideoRequest {
 
     private String titulo;
     private String descricao;
