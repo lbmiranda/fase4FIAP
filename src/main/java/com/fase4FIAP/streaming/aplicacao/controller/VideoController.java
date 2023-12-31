@@ -49,4 +49,8 @@ public class VideoController {
         return Categoria.values();
     }
 
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable String id) {
+        servicoVideo.delete(id);
+    }
 }

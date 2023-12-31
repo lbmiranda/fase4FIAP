@@ -17,4 +17,5 @@ public interface IVideoService {
 
     Video getById(String id);
 
+    void delete(String id);
 }

@@ -53,6 +53,14 @@ public class VideoService implements IVideoService {
         return videoRepositorio.findById(id).block();
     }
 
+    @Override
+    public void delete(String id) {
+        videoRepositorio.deleteById(id).subscribe(
+                null,
+                error -> System.err.println("Erro ao deletar vídeo: " + error),
+                () -> System.out.println("Vídeo deletado com sucesso: " + id));
+    }
+
     public List<Video> findByCategoriaAndNotFavoritedByUser(Categoria categoria, String usuarioId) {
         var idsFavoritos = videoFavoritoService.getFavoritosPorUsuario(usuarioId)
                 .stream()

@@ -120,6 +120,8 @@
 <div class="container mt-5">
     <h1 class="mb-4">FIAP Fase 4 - streaming</h1>
 
+    <div id="messageBox" class="alert" style="display:none;"></div>
+
     <form id="uploadForm" enctype="multipart/form-data">
         <label for="videoFile" class="form-label">Selecione um vídeo para carregar:</label>
         <input type="file" id="videoFile" name="arquivo" accept="video/*" required class="form-control">
@@ -236,12 +238,23 @@
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Falha ao enviar vídeo');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Video uploaded:', data);
-            window.location.reload();
+            showMessage('Video uploaded com sucesso!', 'success');
+            fetchAndDisplayVideos(); // Atualiza a lista de vídeos sem recarregar a página
         })
-        .catch(error => console.error('Error uploading video:', error));
+        .catch(error => {
+            error.response.text().then(errorMessage => {
+                console.error('Error uploading video:', errorMessage);
+                showMessage(errorMessage, 'danger');
+            });
+        });
     }
 
     let lastPlayedVideoId = null;  // Variável para armazenar o ID do último vídeo reproduzido
@@ -316,16 +329,24 @@
     }
 
     function deleteVideo(videoId) {
-            fetch(`/videos/delete/${videoId}`, {
-                method: 'DELETE',
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Video deleted:', data);
-                fetchAndDisplayVideos();
-            })
-            .catch(error => console.error('Erro ao deletar video:', error));
-        }
+        fetch(`/videos/${videoId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Falha ao deletar vídeo');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Video deleted:', data);
+            fetchAndDisplayVideos(); // Atualiza a lista de vídeos
+        })
+        .catch(error => {
+            console.error('Erro ao deletar video:', error);
+            showMessage('Erro ao deletar vídeo', 'danger');
+        });
+    }
 
     function applyFilters() {
         const categoriaFilter = document.getElementById('categoriaFilter').value;
@@ -343,6 +364,13 @@
                 });
             })
         .catch(error => console.error('Error fetching and applying filters:', error));
+    }
+
+    function showMessage(message, type) {
+        const messageBox = document.getElementById('messageBox');
+        messageBox.className = `alert alert-${type}`;
+        messageBox.textContent = message;
+        messageBox.style.display = 'block';
     }
 
     function likeVideo() {
