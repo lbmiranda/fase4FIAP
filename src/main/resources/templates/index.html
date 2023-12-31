@@ -200,9 +200,16 @@
                 </tr>
                 </tbody>
             </table>
+
+            <div class="pagination-controls my-3">
+                <button id="firstPageButton" onclick="goToFirstPage()" class="btn btn-outline-primary me-2">Primeira</button>
+                <button id="previousPageButton" onclick="goToPreviousPage()" class="btn btn-outline-primary me-2">Anterior</button>
+                <span>Página <span id="currentPageDisplay">1</span> de <span id="totalPagesDisplay">?</span></span>
+                <button id="nextPageButton" onclick="goToNextPage()" class="btn btn-outline-primary ms-2">Próxima</button>
+                <button id="lastPageButton" onclick="goToLastPage(totalPagesCount)" class="btn btn-outline-primary ms-2">Última</button>
+            </div>
         </div>
 </div>
-
 
 <!-- Bootstrap JS and Popper.js CDN (required for Bootstrap) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -267,20 +274,25 @@
         videoPlayer.play().catch(e => console.error("Error playing video:", e));
     }
 
-    function fetchAndDisplayVideos(categoryFilter = '') {
-        fetch('/videos')
+    function fetchAndDisplayVideos(page = 0, size = 10, categoryFilter = '') {
+        const url = `/videos?page=${page}&size=${size}`; // Modifique a URL para incluir parâmetros de paginação
+
+        fetch(url)
             .then(response => response.json())
-            .then(videos => {
+            .then(data => {
                 const videoList = document.getElementById('videoList');
                 videoList.innerHTML = '';
 
-                videos.forEach(video => {
+                data.content.forEach(video => {
                     if (categoryFilter === '' || video.categoria === categoryFilter) {
                         createAndAppendVideoRow(video, videoList);
                     }
                 });
+
+                // Atualiza os controles de paginação usando dados reais
+                updatePaginationControls(data.totalPages, data.number);
             })
-        .catch(error => console.error('Error fetching videos:', error));
+            .catch(error => console.error('Error fetching videos:', error));
     }
 
     function createAndAppendVideoRow(video, videoList) {
@@ -418,6 +430,49 @@
                 alert('Erro ao curtir vídeo. Verifique o console para mais detalhes.');
             }
         });
+    }
+
+    let currentPage = 0; // Mantém o controle da página atual
+    const pageSize = 10; // Define o tamanho padrão da página
+
+    function goToNextPage() {
+        currentPage += 1;
+        fetchAndDisplayVideos(currentPage, pageSize);
+    }
+
+    function goToPreviousPage() {
+        if (currentPage > 0) {
+            currentPage -= 1;
+            fetchAndDisplayVideos(currentPage, pageSize);
+        }
+    }
+
+    function goToFirstPage() {
+        currentPage = 0;
+        fetchAndDisplayVideos(currentPage, pageSize);
+    }
+
+    function goToLastPage(totalPages) {
+        if (totalPages && !isNaN(totalPages)) {
+            currentPage = totalPages - 1;
+            fetchAndDisplayVideos(currentPage, pageSize);
+        } else {
+            console.error("Número total de páginas inválido:", totalPages);
+        }
+    }
+
+    let totalPagesCount = 0;
+
+    function updatePaginationControls(totalPages, currentPage) {
+        totalPagesCount = totalPages; // Atualiza a variável global
+        document.getElementById('totalPagesDisplay').textContent = totalPages;
+        document.getElementById('currentPageDisplay').textContent = currentPage + 1; // +1 porque as páginas geralmente são exibidas a partir de 1, não de 0
+
+        // Desabilita os botões de navegação quando apropriado
+        document.getElementById('previousPageButton').disabled = currentPage <= 0;
+        document.getElementById('firstPageButton').disabled = currentPage <= 0;
+        document.getElementById('nextPageButton').disabled = currentPage >= totalPages - 1;
+        document.getElementById('lastPageButton').disabled = currentPage >= totalPages - 1;
     }
 
 </script>
