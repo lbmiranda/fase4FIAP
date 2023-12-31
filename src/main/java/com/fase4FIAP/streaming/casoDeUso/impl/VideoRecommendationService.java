@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +35,7 @@ public class VideoRecommendationService implements IVideoRecommendationService {
         var favoritos = videoFavoritoService.getFavoritosPorUsuario(usuarioId);
         return favoritos.stream()
                 .map(favorito -> videoService.getById(favorito.getVideoId()))
+                .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(Video::getCategoria, Collectors.counting()));
     }
 
