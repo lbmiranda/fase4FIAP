@@ -3,6 +3,7 @@ package com.fase4FIAP.streaming.casoDeUso.impl;
 import com.fase4FIAP.streaming.aplicacao.exceptions.NotFoundException;
 import com.fase4FIAP.streaming.casoDeUso.contract.IVideoService;
 import com.fase4FIAP.streaming.dominio.dto.request.VideoRequest;
+import com.fase4FIAP.streaming.dominio.dto.response.VideoDeleteResponse;
 import com.fase4FIAP.streaming.dominio.dto.response.VideoFavoritoResponse;
 import com.fase4FIAP.streaming.dominio.dto.response.VideoUploadResponse;
 import com.fase4FIAP.streaming.dominio.enums.Categoria;
@@ -64,4 +65,21 @@ public class VideoService implements IVideoService {
                 .filter(video -> !idsFavoritos.contains(video.getVideoId()))
                 .toList();
     }
+
+    @Override
+    public Mono<VideoDeleteResponse> deleteVideo(String videoId) {
+
+        return videoRepositorio.findById(videoId)
+                .flatMap(existingVideo -> videoRepositorio.deleteById(videoId)
+                        .thenReturn(VideoDeleteResponse.sucesso()))
+                .switchIfEmpty(Mono.just(VideoDeleteResponse.falha()));
+    }
+
+
+    @Override
+    public Flux<Video> buscaVideoPorTitulo (String query) {
+        return videoRepositorio.findByTituloContainingIgnoreCase(query);
+    }
+
+
 }

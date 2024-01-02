@@ -17,4 +17,7 @@ public class VideoRequest {
     private String dataPublicacao;
     private String categoria;
     private String favorito;
+
+
+
 }

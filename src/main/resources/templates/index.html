@@ -118,8 +118,13 @@
         <label for="dataPublicacao" class="form-label">Data publicação:</label>
         <input type="date" id="dataPublicacao" name="dataPublicacao" class="form-control">
         <br>
-        <label for="categoria" class="form-label">Categoria:</label>
-        <input type="text" id="categoria" name="categoria" class="form-control">
+        <div class="mb-3">
+            <label for="categoria">Categoria:</label>
+            <select id="categoria" name="categoria" class="form-select">
+                <option th:each="categoria : ${T(com.fase4FIAP.streaming.dominio.enums.Categoria).values()}"
+                        th:value="${categoria}" th:text="${categoria.getNomeCategoria()}"></option>
+            </select>
+        </div>
         <br>
         <label for="favorito" class="form-label">Favorito:</label>
         <select id="favorito" name="favorito" class="form-select">
@@ -137,6 +142,12 @@
     <video id="videoPlayer" class="videoPlayer" controls>
         Seu navegador não suporta a tag de vídeo.
     </video>
+
+    <div class="mb-3">
+        <label for="searchQuery">Buscar vídeos por título:</label>
+        <input type="text" id="searchQuery" class="form-control">
+        <button type="button" onclick="buscarVideoPorTitulo()" class="btn btn-primary">Buscar</button>
+    </div>
 
     <h2 class="mb-4">Todos os vídeos</h2>
 
@@ -228,17 +239,18 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Video uploaded:', data);
+            console.log('Video carregado:', data);
+            form.reset();
             window.location.reload();
         })
-        .catch(error => console.error('Error uploading video:', error));
+        .catch(error => console.error('Erro ao fazer upload do vídeo:', error));
     }
 
     function playVideo(videoUrl) {
         const videoPlayer = document.getElementById('videoPlayer');
         videoPlayer.src = videoUrl;
         videoPlayer.load();
-        videoPlayer.play().catch(e => console.error("Error playing video:", e));
+        videoPlayer.play().catch(e => console.error("Erro ao reproduzir vídeo:", e));
     }
 
     function fetchAndDisplayVideos(categoryFilter = '') {
@@ -254,7 +266,7 @@
                     }
                 });
             })
-        .catch(error => console.error('Error fetching videos:', error));
+        .catch(error => console.error('Erro ao carregar vídeos:', error));
     }
 
     function createAndAppendVideoRow(video, videoList) {
@@ -307,16 +319,19 @@
     }
 
     function deleteVideo(videoId) {
-            fetch(`/videos/delete/${videoId}`, {
-                method: 'DELETE',
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Video deleted:', data);
+        fetch(`/videos/deletar/${videoId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Video deletado com sucesso');
                 fetchAndDisplayVideos();
-            })
-            .catch(error => console.error('Erro ao deletar video:', error));
-        }
+            } else {
+                console.error('Falha ao deletar o video:', response.statusText);
+            }
+        })
+        .catch(error => console.error('Erro ao deletar video:', error));
+    }
 
     function applyFilters() {
         const categoriaFilter = document.getElementById('categoriaFilter').value;
@@ -329,12 +344,29 @@
                 videoList.innerHTML = '';
 
                 videos.forEach(video => {
-                    if (categoriaFilter === '' || video.categoria === categoriaFilter) {
+                    if ((categoriaFilter === '' || video.categoria === categoriaFilter) &&
+                        (favoritoFilter === '' || video.favorito.toString() === favoritoFilter)) {
                         createAndAppendVideoRow(video, videoList);
                     }
                 });
             })
-        .catch(error => console.error('Error fetching and applying filters:', error));
+            .catch(error => console.error('Erro ao aplicar filtros:', error));
+    }
+
+     function buscarVideoPorTitulo() {
+        const searchQuery = document.getElementById('searchQuery').value;
+
+        fetch(`/videos/buscar?query=${searchQuery}`)
+            .then(response => response.json())
+            .then(videos => {
+                const videoList = document.getElementById('videoList');
+                videoList.innerHTML = '';
+
+                videos.forEach(video => {
+                    createAndAppendVideoRow(video, videoList);
+                });
+            })
+        .catch(error => console.error('Erro ao buscar vídeo:', error));
     }
 
 

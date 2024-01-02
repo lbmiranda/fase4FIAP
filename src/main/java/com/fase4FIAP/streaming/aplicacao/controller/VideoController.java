@@ -44,9 +44,27 @@ public class VideoController {
         return servicoVideo.getAllVideos();
     }
 
+    @GetMapping("/buscar")
+    public ResponseEntity<Flux<Video>> buscarVideosPorTitulo(@RequestParam (required = false) String query) {
+        Flux<Video> videos = servicoVideo.buscaVideoPorTitulo(query);
+        return ResponseEntity.ok(videos);
+    }
+
     @ModelAttribute("categorias")
     public Categoria[] getCategorias() {
         return Categoria.values();
+    }
+
+    @DeleteMapping("/deletar/{videoId}")
+    public Mono<ResponseEntity<String>> deleteVideo(@PathVariable String videoId) {
+        return servicoVideo.deleteVideo(videoId)
+                .map(deleted -> {
+                    if(deleted.comSucesso()) {
+                        return ResponseEntity.ok("Vídeo deletado com sucesso!");
+                    } else {
+                        return ResponseEntity.badRequest().body("Erro ao deletar o vídeo");
+                    }
+                });
     }
 
 }

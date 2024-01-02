@@ -3,10 +3,10 @@ package com.fase4FIAP.streaming.dominio.enums;
 public enum Categoria {
 
     MUSICA("Musica"),
-    EDUCACAO("Educação"),
+    EDUCACAO("Educacao"),
     ENTRETENIMENTO("Entretenimento"),
     ESPORTES("Esportes"),
-    NOTICIAS("Notícias"),
+    NOTICIAS("Noticias"),
     OUTROS("Outros");
 
     private final String nomeCategoria;
@@ -16,12 +16,13 @@ public enum Categoria {
     }
 
     public static Categoria fromString(String texto) {
+        String textoArrumado = texto.trim();
         for (Categoria cat : Categoria.values()) {
-            if (cat.getNomeCategoria().equalsIgnoreCase(texto)) {
+            if (cat.getNomeCategoria().equalsIgnoreCase(textoArrumado)) {
                 return cat;
             }
         }
-        throw new IllegalArgumentException("Categoria não reconhecida: " + texto);
+        throw new IllegalArgumentException("Categoria não reconhecida: " + textoArrumado);
     }
 
     public String getNomeCategoria() {
