@@ -20,4 +20,6 @@ public interface VideoReativoRepositorio extends ReactiveCrudRepository<Video, S
     Mono<Video> findByNomeArquivo(String videoId);
 
     Flux<Video> findByCategoria(Categoria categoria);
+
+    Flux<Video> findByTituloContainingIgnoreCase(String titulo);
 }
