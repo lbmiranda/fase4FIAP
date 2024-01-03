@@ -5,6 +5,11 @@ import com.fase4FIAP.streaming.dominio.dto.request.VideoRequest;
 import com.fase4FIAP.streaming.dominio.enums.Categoria;
 import com.fase4FIAP.streaming.dominio.model.Video;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +45,9 @@ public class VideoController {
     }
 
     @GetMapping
-    public Flux<Video> getAllVideos() {
-        return servicoVideo.getAllVideos();
+    public Page<Video> getAllVideos(@RequestParam(defaultValue = "0") Integer page,
+                                    @RequestParam(defaultValue = "10") Integer size) {
+        return servicoVideo.getAllVideosPaginado(page, size);
     }
 
     @GetMapping("/buscar")
@@ -55,6 +61,10 @@ public class VideoController {
         return Categoria.values();
     }
 
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable String id) {
+        servicoVideo.delete(id);
+    }
     @DeleteMapping("/deletar/{videoId}")
     public Mono<ResponseEntity<String>> deleteVideo(@PathVariable String videoId) {
         return servicoVideo.deleteVideo(videoId)

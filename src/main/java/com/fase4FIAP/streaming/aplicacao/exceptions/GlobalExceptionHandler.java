@@ -27,4 +27,10 @@ public class GlobalExceptionHandler {
         var details = new ErrorDetails(errors.toString(), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(AlreadyFavoritedException.class)
+    public ResponseEntity<ErrorDetails> handleAlreadyFavoritedException(AlreadyFavoritedException ex) {
+        var details = new ErrorDetails(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+    }
 }

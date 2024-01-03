@@ -74,6 +74,21 @@
             max-width: 640px;
             margin-bottom: 20px;
         }
+
+        .video-interaction {
+            gap: 10px;  /* Espaço entre o botão e o campo de entrada */
+        }
+
+        .videoPlayer {
+            width: 100%;
+            max-width: 640px;
+            margin-bottom: 10px; /* Menos espaço abaixo do vídeo */
+        }
+
+        #likeButton {
+            white-space: nowrap; /* Evita que o texto do botão quebre em várias linhas */
+        }
+
     </style>
 </head>
 
@@ -92,6 +107,9 @@
                     <a class="nav-link" href="/recommendation">Recomendação</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/favorite">Videos favoritos</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/stats">Estatística</a>
                 </li>
             </ul>
@@ -101,6 +119,8 @@
 
 <div class="container mt-5">
     <h1 class="mb-4">FIAP Fase 4 - streaming</h1>
+
+    <div id="messageBox" class="alert" style="display:none;"></div>
 
     <form id="uploadForm" enctype="multipart/form-data">
         <label for="videoFile" class="form-label">Selecione um vídeo para carregar:</label>
@@ -126,12 +146,6 @@
             </select>
         </div>
         <br>
-        <label for="favorito" class="form-label">Favorito:</label>
-        <select id="favorito" name="favorito" class="form-select">
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-        </select>
-        <br>
 
         <button type="button" onclick="uploadVideo()" class="btn btn-success">Upload Video</button>
     </form>
@@ -139,14 +153,19 @@
     <hr>
 
     <h2 class="mb-4">Play Video</h2>
+
     <video id="videoPlayer" class="videoPlayer" controls>
         Seu navegador não suporta a tag de vídeo.
     </video>
 
-    <div class="mb-3">
-        <label for="searchQuery">Buscar vídeos por título:</label>
-        <input type="text" id="searchQuery" class="form-control">
-        <button type="button" onclick="buscarVideoPorTitulo()" class="btn btn-primary">Buscar</button>
+    <div class="video-interaction d-flex align-items-center mt-2">
+        <button id="likeButton" class="btn btn-primary" onclick="likeVideo()">
+            <i class="fa fa-thumbs-up"></i> Curtir
+        </button>
+        <div class="ms-3">
+            <label for="userId" class="form-label d-block mb-1">ID do Usuário:</label>
+            <input type="text" id="userId" class="form-control" style="width: 200px;" placeholder="Digite seu ID de usuário">
+        </div>
     </div>
 
     <h2 class="mb-4">Todos os vídeos</h2>
@@ -160,16 +179,7 @@
                                 th:value="${categoria}" th:text="${categoria.getNomeCategoria()}"></option>
                     </select>
 
-
-                    <label for="favoritoFilter">Favorito:</label>
-                    <select id="favoritoFilter" onchange="applyFilters()">
-                        <option value="">Todos</option>
-                        <option value="true">Sim</option>
-                        <option value="false">Não</option>
-                    </select>
                 </div>
-
-
 
                 <table class='table table-striped table-hover'>
                 <thead>
@@ -178,7 +188,6 @@
                     <th>Descrição</th>
                     <th>Data de publicação</th>
                     <th>Categoria</th>
-                    <th>Favorito</th>
                     <th>Deletar</th>
                 </tr>
                 </thead>
@@ -188,7 +197,6 @@
                     <td th:text="${video.descricao}"></td>
                     <td th:text="${video.dataPublicacao}"></td>
                     <td th:text="${video.categoria}"></td>
-                    <td th:text="${video.favorito}"></td>
                     <td>
                         <button type="button" onclick="deleteVideo('${video.videoId}')" class="btn btn-danger btn-sm">
                             <i class="fa fa-trash"></i> Deletar
@@ -197,9 +205,16 @@
                 </tr>
                 </tbody>
             </table>
+
+            <div class="pagination-controls my-3">
+                <button id="firstPageButton" onclick="goToFirstPage()" class="btn btn-outline-primary me-2">Primeira</button>
+                <button id="previousPageButton" onclick="goToPreviousPage()" class="btn btn-outline-primary me-2">Anterior</button>
+                <span>Página <span id="currentPageDisplay">1</span> de <span id="totalPagesDisplay">?</span></span>
+                <button id="nextPageButton" onclick="goToNextPage()" class="btn btn-outline-primary ms-2">Próxima</button>
+                <button id="lastPageButton" onclick="goToLastPage(totalPagesCount)" class="btn btn-outline-primary ms-2">Última</button>
+            </div>
         </div>
 </div>
-
 
 <!-- Bootstrap JS and Popper.js CDN (required for Bootstrap) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -221,7 +236,6 @@
             descricao: formData.get('descricao'),
             dataPublicacao: formData.get('dataPublicacao'),
             categoria: formData.get('categoria'),
-            favorito: formData.get('favorito'),
         };
 
         formData.delete('nomeArquivo');
@@ -229,7 +243,6 @@
         formData.delete('descricao');
         formData.delete('dataPublicacao');
         formData.delete('categoria');
-        formData.delete('favorito');
 
         formData.append('request', new Blob([JSON.stringify(request)], { type: "application/json" }));
 
@@ -237,36 +250,54 @@
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Video carregado:', data);
-            form.reset();
-            window.location.reload();
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Falha ao enviar vídeo');
+            }
+            return response.json();
         })
-        .catch(error => console.error('Erro ao fazer upload do vídeo:', error));
+        .then(data => {
+            console.log('Video uploaded:', data);
+            showMessage('Video uploaded com sucesso!', 'success');
+            fetchAndDisplayVideos(); // Atualiza a lista de vídeos sem recarregar a página
+        })
+        .catch(error => {
+            error.response.text().then(errorMessage => {
+                console.error('Error uploading video:', errorMessage);
+                showMessage(errorMessage, 'danger');
+            });
+        });
     }
 
+    let lastPlayedVideoId = null;  // Variável para armazenar o ID do último vídeo reproduzido
+
     function playVideo(videoUrl) {
+        lastPlayedVideoId = videoUrl.split('/').pop();
         const videoPlayer = document.getElementById('videoPlayer');
         videoPlayer.src = videoUrl;
         videoPlayer.load();
         videoPlayer.play().catch(e => console.error("Erro ao reproduzir vídeo:", e));
     }
 
-    function fetchAndDisplayVideos(categoryFilter = '') {
-        fetch('/videos')
+    function fetchAndDisplayVideos(page = 0, size = 10, categoryFilter = '') {
+        const url = `/videos?page=${page}&size=${size}`; // Modifique a URL para incluir parâmetros de paginação
+
+        fetch(url)
             .then(response => response.json())
-            .then(videos => {
+            .then(data => {
                 const videoList = document.getElementById('videoList');
                 videoList.innerHTML = '';
 
-                videos.forEach(video => {
+                data.content.forEach(video => {
                     if (categoryFilter === '' || video.categoria === categoryFilter) {
                         createAndAppendVideoRow(video, videoList);
                     }
                 });
+
+                // Atualiza os controles de paginação usando dados reais
+                updatePaginationControls(data.totalPages, data.number);
             })
-        .catch(error => console.error('Erro ao carregar vídeos:', error));
+            .catch(error => console.error('Error fetching videos:', error));
     }
 
     function createAndAppendVideoRow(video, videoList) {
@@ -300,10 +331,6 @@
         categoriaCell.textContent = video.categoria;
         videoRow.appendChild(categoriaCell);
 
-        const favoritoCell = document.createElement('td');
-        favoritoCell.textContent = video.favorito;
-        videoRow.appendChild(favoritoCell);
-
         const deleteCell = document.createElement('td');
         const deleteButton = document.createElement('button');
         deleteButton.type = 'button';
@@ -319,23 +346,27 @@
     }
 
     function deleteVideo(videoId) {
-        fetch(`/videos/deletar/${videoId}`, {
+        fetch(`/videos/${videoId}`, {
             method: 'DELETE',
         })
         .then(response => {
-            if (response.ok) {
-                console.log('Video deletado com sucesso');
-                fetchAndDisplayVideos();
-            } else {
-                console.error('Falha ao deletar o video:', response.statusText);
+            if (!response.ok) {
+                throw new Error('Falha ao deletar vídeo');
             }
+            return response.json();
         })
-        .catch(error => console.error('Erro ao deletar video:', error));
+        .then(data => {
+            console.log('Video deleted:', data);
+            fetchAndDisplayVideos(); // Atualiza a lista de vídeos
+        })
+        .catch(error => {
+            console.error('Erro ao deletar video:', error);
+            showMessage('Erro ao deletar vídeo', 'danger');
+        });
     }
 
     function applyFilters() {
         const categoriaFilter = document.getElementById('categoriaFilter').value;
-        const favoritoFilter = document.getElementById('favoritoFilter').value;
 
         fetch('/videos')
             .then(response => response.json())
@@ -369,6 +400,102 @@
         .catch(error => console.error('Erro ao buscar vídeo:', error));
     }
 
+    function showMessage(message, type) {
+        const messageBox = document.getElementById('messageBox');
+        messageBox.className = `alert alert-${type}`;
+        messageBox.textContent = message;
+        messageBox.style.display = 'block';
+    }
+
+    function likeVideo() {
+        const usuarioId = document.getElementById('userId').value;
+        const videoId = lastPlayedVideoId;
+
+        if (!usuarioId || !videoId) {
+            alert('Por favor, insira o ID do usuário e reproduza um vídeo antes de curtir.');
+            return;
+        }
+
+        const today = new Date().toISOString().split('T')[0];  // Formata a data de hoje como yyyy-mm-dd
+
+        const request = {
+            usuarioId: usuarioId,
+            videoId: videoId,
+            dataCriacao: today
+        };
+
+        fetch('/video-favoritos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(request)
+        })
+        .then(response => {
+            if (!response.ok) {
+                // Se a resposta não for ok, converte a resposta em JSON para poder ler a mensagem de erro
+                return response.json().then(err => { throw new Error(err.message) });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Vídeo curtido com sucesso:', data);
+            alert('Vídeo curtido com sucesso!');
+        })
+        .catch(error => {
+            console.error('Erro ao curtir vídeo:', error);
+            // Verifica se a mensagem de erro é sobre o vídeo já estar favoritado
+            if (error.message === "O vídeo já está favoritado pelo usuário.") {
+                alert('Você já favoritou este vídeo.');
+            } else {
+                // Para outros erros, mostra uma mensagem genérica
+                alert('Erro ao curtir vídeo. Verifique o console para mais detalhes.');
+            }
+        });
+    }
+
+    let currentPage = 0; // Mantém o controle da página atual
+    const pageSize = 10; // Define o tamanho padrão da página
+
+    function goToNextPage() {
+        currentPage += 1;
+        fetchAndDisplayVideos(currentPage, pageSize);
+    }
+
+    function goToPreviousPage() {
+        if (currentPage > 0) {
+            currentPage -= 1;
+            fetchAndDisplayVideos(currentPage, pageSize);
+        }
+    }
+
+    function goToFirstPage() {
+        currentPage = 0;
+        fetchAndDisplayVideos(currentPage, pageSize);
+    }
+
+    function goToLastPage(totalPages) {
+        if (totalPages && !isNaN(totalPages)) {
+            currentPage = totalPages - 1;
+            fetchAndDisplayVideos(currentPage, pageSize);
+        } else {
+            console.error("Número total de páginas inválido:", totalPages);
+        }
+    }
+
+    let totalPagesCount = 0;
+
+    function updatePaginationControls(totalPages, currentPage) {
+        totalPagesCount = totalPages; // Atualiza a variável global
+        document.getElementById('totalPagesDisplay').textContent = totalPages;
+        document.getElementById('currentPageDisplay').textContent = currentPage + 1; // +1 porque as páginas geralmente são exibidas a partir de 1, não de 0
+
+        // Desabilita os botões de navegação quando apropriado
+        document.getElementById('previousPageButton').disabled = currentPage <= 0;
+        document.getElementById('firstPageButton').disabled = currentPage <= 0;
+        document.getElementById('nextPageButton').disabled = currentPage >= totalPages - 1;
+        document.getElementById('lastPageButton').disabled = currentPage >= totalPages - 1;
+    }
 
 </script>
 

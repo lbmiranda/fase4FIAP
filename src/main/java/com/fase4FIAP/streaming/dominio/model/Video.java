@@ -29,7 +29,6 @@ public class Video {
     @Indexed
     private LocalDate dataPublicacao;
     private Categoria categoria;
-    private Boolean favorito;
     private long view;
 
     public static Video of(byte[] videoData, VideoRequest request) {
@@ -37,7 +36,6 @@ public class Video {
         response.setVideoData(videoData);
         response.setDataPublicacao(LocalDate.parse(request.getDataPublicacao()));
         response.setCategoria(Categoria.fromString(request.getCategoria()));
-        response.setFavorito("true".equals(request.getFavorito()));
         copyProperties(request, response);
         return response;
     }

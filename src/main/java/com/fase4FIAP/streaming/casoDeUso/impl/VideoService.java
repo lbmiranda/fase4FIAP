@@ -8,8 +8,12 @@ import com.fase4FIAP.streaming.dominio.dto.response.VideoFavoritoResponse;
 import com.fase4FIAP.streaming.dominio.dto.response.VideoUploadResponse;
 import com.fase4FIAP.streaming.dominio.enums.Categoria;
 import com.fase4FIAP.streaming.dominio.model.Video;
+import com.fase4FIAP.streaming.dominio.repository.VideoReativoRepositorio;
 import com.fase4FIAP.streaming.dominio.repository.VideoRepositorio;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
@@ -21,23 +25,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VideoService implements IVideoService {
 
+    private final VideoReativoRepositorio videoReativoRepositorio;
     private final VideoRepositorio videoRepositorio;
     private final VideoFavoritoService videoFavoritoService;
 
     public Mono<VideoUploadResponse> uploadVideo(MultipartFile arquivo, VideoRequest request) {
         return Mono.fromCallable(arquivo::getBytes)
                 .map(videoData -> Video.of(videoData, request))
-                .flatMap(videoRepositorio::save)
+                .flatMap(videoReativoRepositorio::save)
                 .map(video -> new VideoUploadResponse(true, video.getVideoId()))
                 .defaultIfEmpty(new VideoUploadResponse(false, null));
     }
 
     @Override
     public Mono<byte[]> getVideoContent(String videoId) {
-        return videoRepositorio.findById(videoId)
+        return videoReativoRepositorio.findById(videoId)
                 .flatMap(video -> {
                     video.incrementaView();
-                    return videoRepositorio.save(video)
+                    return videoReativoRepositorio.save(video)
                             .thenReturn(video);
                 })
                 .map(Video::getVideoData)
@@ -46,12 +51,26 @@ public class VideoService implements IVideoService {
 
     @Override
     public Flux<Video> getAllVideos() {
-        return videoRepositorio.findAll();
+        return videoReativoRepositorio.findAll();
+    }
+
+    @Override
+    public Page<Video> getAllVideosPaginado(int page, int size) {
+        var pageable = PageRequest.of(page, size, Sort.by("dataPublicacao").descending());
+        return videoRepositorio.findAll(pageable);
     }
 
     @Override
     public Video getById(String id) {
-        return videoRepositorio.findById(id).block();
+        return videoReativoRepositorio.findById(id).block();
+    }
+
+    @Override
+    public void delete(String id) {
+        videoReativoRepositorio.deleteById(id).subscribe(
+                null,
+                error -> System.err.println("Erro ao deletar vídeo: " + error),
+                () -> System.out.println("Vídeo deletado com sucesso: " + id));
     }
 
     public List<Video> findByCategoriaAndNotFavoritedByUser(Categoria categoria, String usuarioId) {
@@ -60,7 +79,7 @@ public class VideoService implements IVideoService {
                 .map(VideoFavoritoResponse::getVideoId)
                 .toList();
 
-        return videoRepositorio.findByCategoria(categoria)
+        return videoReativoRepositorio.findByCategoria(categoria)
                 .toStream()
                 .filter(video -> !idsFavoritos.contains(video.getVideoId()))
                 .toList();
