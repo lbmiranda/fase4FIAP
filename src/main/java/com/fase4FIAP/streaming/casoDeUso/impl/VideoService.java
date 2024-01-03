@@ -88,8 +88,8 @@ public class VideoService implements IVideoService {
     @Override
     public Mono<VideoDeleteResponse> deleteVideo(String videoId) {
 
-        return videoRepositorio.findById(videoId)
-                .flatMap(existingVideo -> videoRepositorio.deleteById(videoId)
+        return videoReativoRepositorio.findById(videoId)
+                .flatMap(existingVideo -> videoReativoRepositorio.deleteById(videoId)
                         .thenReturn(VideoDeleteResponse.sucesso()))
                 .switchIfEmpty(Mono.just(VideoDeleteResponse.falha()));
     }
@@ -97,7 +97,7 @@ public class VideoService implements IVideoService {
 
     @Override
     public Flux<Video> buscaVideoPorTitulo (String query) {
-        return videoRepositorio.findByTituloContainingIgnoreCase(query);
+        return videoReativoRepositorio.findByTituloContainingIgnoreCase(query);
     }
 
 
