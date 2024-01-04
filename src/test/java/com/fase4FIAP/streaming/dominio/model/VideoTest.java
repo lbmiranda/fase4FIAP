@@ -3,8 +3,6 @@ package com.fase4FIAP.streaming.dominio.model;
 import com.fase4FIAP.streaming.dominio.dto.request.VideoRequest;
 import com.fase4FIAP.streaming.dominio.enums.Categoria;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.io.IOException;
 import java.time.LocalDate;

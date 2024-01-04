@@ -2,6 +2,7 @@ package com.fase4FIAP.streaming.dominio.model;
 
 import com.fase4FIAP.streaming.dominio.dto.request.UsuarioRequest;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -12,6 +13,7 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Document(collection = "usuarios")
 public class Usuario {
 

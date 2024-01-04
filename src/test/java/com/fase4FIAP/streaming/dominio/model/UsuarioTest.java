@@ -1,6 +1,7 @@
 package com.fase4FIAP.streaming.dominio.model;
 
 import com.fase4FIAP.streaming.dominio.dto.request.UsuarioRequest;
+import com.fase4FIAP.streaming.utils.UsuarioHelper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

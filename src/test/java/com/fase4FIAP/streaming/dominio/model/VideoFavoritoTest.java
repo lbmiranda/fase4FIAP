@@ -1,7 +1,6 @@
 package com.fase4FIAP.streaming.dominio.model;
 
 import com.fase4FIAP.streaming.dominio.dto.request.VideoFavoritoRequest;
-import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
