@@ -1,4 +1,4 @@
 package com.fase4FIAP.streaming.dominio.repository;
 
-public class VideoFavoritoRepositorioTest {
+public class VideoRepositoryTest {
 }

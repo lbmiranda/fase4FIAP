@@ -1,7 +1,8 @@
 package com.fase4FIAP.streaming.dominio.model;
 
-import com.fase4FIAP.streaming.dominio.dto.request.VideoRequest;
-import com.fase4FIAP.streaming.dominio.enums.Categoria;
+import com.fase4FIAP.streaming.domain.dto.request.VideoRequest;
+import com.fase4FIAP.streaming.domain.enums.Category;
+import com.fase4FIAP.streaming.domain.model.Video;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,48 +14,48 @@ class VideoTest {
 
     @Test
     void deveConverterVideoRequestEmVideo() throws IOException {
-        String titulo = "Breaking Bad";
-        String descricao = "Piloto";
-        String nomeArquivo = "breaking_bad.mp4";
-        LocalDate dataPublicacao = LocalDate.of(2008,1,20);
-        Categoria categoria = Categoria.ENTRETENIMENTO;
-        String favorito = ""; // TODO VERIFICAR A LÓGICA DO FAVORITO
+        String title = "Breaking Bad";
+        String description = "Piloto";
+        String fileName = "breaking_bad.mp4";
+        LocalDate publicationDate = LocalDate.of(2008,1,20);
+        Category category = Category.ENTERTAINMENT;
+        String favorite = ""; // TODO VERIFICAR A LÓGICA DO FAVORITO
 
-        VideoRequest videoRequest = new VideoRequest(titulo, descricao, nomeArquivo, dataPublicacao.toString(), categoria.getNomeCategoria(), favorito);
-        Video video = Video.of(nomeArquivo.getBytes(), videoRequest);
+        VideoRequest videoRequest = new VideoRequest(title, description, fileName, publicationDate.toString(), category.getCategoryName(), favorite);
+        Video video = Video.of(fileName.getBytes(), videoRequest);
 
-        assertEquals(titulo, video.getTitulo());
-        assertEquals(descricao, video.getDescricao());
-        assertEquals(nomeArquivo, video.getNomeArquivo());
-        assertEquals(dataPublicacao, video.getDataPublicacao());
-        assertEquals(categoria, video.getCategoria());
+        assertEquals(title, video.getTitle());
+        assertEquals(description, video.getDescription());
+        assertEquals(fileName, video.getFileName());
+        assertEquals(publicationDate, video.getPublicationDate());
+        assertEquals(category, video.getCategory());
     }
 
     @Test
     void deveValidarIncrementoDeView(){
 
         String videoId = "123456";
-        String titulo = "Breaking Bad";
-        String descricao = "Piloto";
-        String nomeArquivo = "breaking_bad.mp4";
-        byte[] videoData = nomeArquivo.getBytes();
-        LocalDate dataPublicacao = LocalDate.of(2008,1,20);
-        Categoria categoria = Categoria.ENTRETENIMENTO;
+        String title = "Breaking Bad";
+        String description = "Piloto";
+        String fileName = "breaking_bad.mp4";
+        byte[] videoData = fileName.getBytes();
+        LocalDate publicationDate = LocalDate.of(2008,1,20);
+        Category category = Category.ENTERTAINMENT;
         long view = 0L;
 
         Video video = new Video();
         video.setVideoId(videoId);
-        video.setTitulo(titulo);
-        video.setDescricao(descricao);
-        video.setNomeArquivo(nomeArquivo);
+        video.setTitle(title);
+        video.setDescription(description);
+        video.setFileName(fileName);
         video.setVideoData(videoData);
-        video.setDataPublicacao(dataPublicacao);
-        video.setCategoria(categoria);
+        video.setPublicationDate(publicationDate);
+        video.setCategory(category);
         video.setView(view);
 
-        video.incrementaView();
-        video.incrementaView();
-        video.incrementaView();
+        video.incrementView();
+        video.incrementView();
+        video.incrementView();
 
         assertEquals(video.getView(), 3L);
     }
