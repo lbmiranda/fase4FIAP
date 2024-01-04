@@ -3,12 +3,12 @@ package com.fase4FIAP.streaming.useCase.implementation;
 import com.fase4FIAP.streaming.application.exceptions.NotFoundException;
 import com.fase4FIAP.streaming.useCase.contract.IVideoService;
 import com.fase4FIAP.streaming.domain.dto.request.VideoRequest;
-import com.fase4FIAP.streaming.domain.dto.response.VideoDeleteResponse;
-import com.fase4FIAP.streaming.domain.dto.response.VideoFavoriteResponse;
+import com.fase4FIAP.streaming.domain.dto.response.DeleteVideoResponse;
+import com.fase4FIAP.streaming.domain.dto.response.FavoriteVideoResponse;
 import com.fase4FIAP.streaming.domain.dto.response.VideoUploadResponse;
 import com.fase4FIAP.streaming.domain.enums.Category;
 import com.fase4FIAP.streaming.domain.model.Video;
-import com.fase4FIAP.streaming.domain.repository.VideoReactiveRepository;
+import com.fase4FIAP.streaming.domain.repository.ReactiveVideoRepository;
 import com.fase4FIAP.streaming.domain.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,24 +25,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VideoService implements IVideoService {
 
-    private final VideoReactiveRepository videoReactiveRepository;
+    private final ReactiveVideoRepository reactiveVideoRepository;
     private final VideoRepository videoRepository;
-    private final VideoFavoriteService videoFavoriteService;
+    private final FavoriteVideoService videoFavoriteService;
 
     public Mono<VideoUploadResponse> uploadVideo(MultipartFile file, VideoRequest request) {
         return Mono.fromCallable(file::getBytes)
                 .map(videoData -> Video.of(videoData, request))
-                .flatMap(videoReactiveRepository::save)
+                .flatMap(reactiveVideoRepository::save)
                 .map(video -> new VideoUploadResponse(true, video.getVideoId()))
                 .defaultIfEmpty(new VideoUploadResponse(false, null));
     }
 
     @Override
     public Mono<byte[]> getVideoContent(String videoId) {
-        return videoReactiveRepository.findById(videoId)
+        return reactiveVideoRepository.findById(videoId)
                 .flatMap(video -> {
-                    video.incrementaView();
-                    return videoReactiveRepository.save(video)
+                    video.incrementView();
+                    return reactiveVideoRepository.save(video)
                             .thenReturn(video);
                 })
                 .map(Video::getVideoData)
@@ -51,23 +51,23 @@ public class VideoService implements IVideoService {
 
     @Override
     public Flux<Video> getAllVideos() {
-        return videoReactiveRepository.findAll();
+        return reactiveVideoRepository.findAll();
     }
 
     @Override
     public Page<Video> getAllVideosPaginate(int page, int size) {
-        var pageable = PageRequest.of(page, size, Sort.by("dataPublicacao").descending());
+        var pageable = PageRequest.of(page, size, Sort.by("publicationDate").descending());
         return videoRepository.findAll(pageable);
     }
 
     @Override
     public Video getById(String id) {
-        return videoReactiveRepository.findById(id).block();
+        return reactiveVideoRepository.findById(id).block();
     }
 
     @Override
     public void delete(String id) {
-        videoReactiveRepository.deleteById(id).subscribe(
+        reactiveVideoRepository.deleteById(id).subscribe(
                 null,
                 error -> System.err.println("Erro ao deletar vídeo: " + error),
                 () -> System.out.println("Vídeo deletado com sucesso: " + id));
@@ -76,28 +76,28 @@ public class VideoService implements IVideoService {
     public List<Video> findByCategoryAndNotFavoritedByUser(Category category, String userId) {
         var idsFavorites = videoFavoriteService.getFavoritesByUser(userId)
                 .stream()
-                .map(VideoFavoriteResponse::getVideoId)
+                .map(FavoriteVideoResponse::getVideoId)
                 .toList();
 
-        return videoReactiveRepository.findByCategory(category)
+        return reactiveVideoRepository.findByCategory(category)
                 .toStream()
                 .filter(video -> !idsFavorites.contains(video.getVideoId()))
                 .toList();
     }
 
     @Override
-    public Mono<VideoDeleteResponse> deleteVideo(String videoId) {
+    public Mono<DeleteVideoResponse> deleteVideo(String videoId) {
 
-        return videoReactiveRepository.findById(videoId)
-                .flatMap(existingVideo -> videoReactiveRepository.deleteById(videoId)
-                        .thenReturn(VideoDeleteResponse.success()))
-                .switchIfEmpty(Mono.just(VideoDeleteResponse.error()));
+        return reactiveVideoRepository.findById(videoId)
+                .flatMap(existingVideo -> reactiveVideoRepository.deleteById(videoId)
+                        .thenReturn(DeleteVideoResponse.success()))
+                .switchIfEmpty(Mono.just(DeleteVideoResponse.error()));
     }
 
 
     @Override
     public Flux<Video> findVideoByTitle (String query) {
-        return videoReactiveRepository.findByTitleContainingIgnoreCase(query);
+        return reactiveVideoRepository.findByTitleContainingIgnoreCase(query);
     }
 
 

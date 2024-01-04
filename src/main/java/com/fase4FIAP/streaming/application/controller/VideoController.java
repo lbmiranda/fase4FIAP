@@ -18,12 +18,11 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/videos")
 public class VideoController {
 
-    private final VideoService servicoVideo;
+    private final VideoService videoService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Mono<ResponseEntity<String>> uploadVideo(@RequestPart MultipartFile file,
-                                                    @RequestPart VideoRequest request) {
-        return servicoVideo.uploadVideo(file, request)
+    public Mono<ResponseEntity<String>> uploadVideo(@RequestPart MultipartFile file, @RequestPart VideoRequest request) {
+        return videoService.uploadVideo(file, request)
                 .map(result -> {
                     if (result.isSuccess()) {
                         return ResponseEntity.ok("Video cadastrado com sucesso. Video ID: " + result.getVideoId());
@@ -35,35 +34,34 @@ public class VideoController {
 
     @GetMapping(value = "play/{videoId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public Mono<ResponseEntity<byte[]>> playVideo(@PathVariable String videoId) {
-        return servicoVideo.getVideoContent(videoId)
+        return videoService.getVideoContent(videoId)
                 .map(videoData -> ResponseEntity.ok().body(videoData))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public Page<Video> getAllVideos(@RequestParam(defaultValue = "0") Integer page,
-                                    @RequestParam(defaultValue = "10") Integer size) {
-        return servicoVideo.getAllVideosPaginate(page, size);
+    public Page<Video> getAllVideos(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+        return videoService.getAllVideosPaginate(page, size);
     }
 
-    @GetMapping("/buscar")
+    @GetMapping("/search")
     public ResponseEntity<Flux<Video>> findVideoByTitle(@RequestParam (required = false) String query) {
-        Flux<Video> videos = servicoVideo.findVideoByTitle(query);
+        Flux<Video> videos = videoService.findVideoByTitle(query);
         return ResponseEntity.ok(videos);
     }
 
-    @ModelAttribute("categorias")
-    public Category[] getCategorys() {
+    @ModelAttribute("categories")
+    public Category[] getCategories() {
         return Category.values();
     }
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable String id) {
-        servicoVideo.delete(id);
+        videoService.delete(id);
     }
-    @DeleteMapping("/deletar/{videoId}")
+    @DeleteMapping("/delete/{videoId}")
     public Mono<ResponseEntity<String>> deleteVideo(@PathVariable String videoId) {
-        return servicoVideo.deleteVideo(videoId)
+        return videoService.deleteVideo(videoId)
                 .map(deleted -> {
                     if(deleted.successfully()) {
                         return ResponseEntity.ok("Vídeo deletado com sucesso!");

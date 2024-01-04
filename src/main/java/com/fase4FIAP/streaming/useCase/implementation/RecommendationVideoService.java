@@ -1,6 +1,6 @@
 package com.fase4FIAP.streaming.useCase.implementation;
 
-import com.fase4FIAP.streaming.useCase.contract.IVideoRecommendationService;
+import com.fase4FIAP.streaming.useCase.contract.IRecommendationVideoService;
 import com.fase4FIAP.streaming.domain.enums.Category;
 import com.fase4FIAP.streaming.domain.model.Video;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class VideoRecommendationService implements IVideoRecommendationService {
+public class RecommendationVideoService implements IRecommendationVideoService {
 
     private final VideoService videoService;
-    private final VideoFavoriteService videoFavoriteService;
+    private final FavoriteVideoService videoFavoriteService;
 
     @Override
     public List<Video> recommendVideos(String userId) {
@@ -32,9 +32,9 @@ public class VideoRecommendationService implements IVideoRecommendationService {
     }
 
     private Map<Category, Long> getCategoriesFavorites(String userId) {
-        var favoritos = videoFavoriteService.getFavoritesByUser(userId);
-        return favoritos.stream()
-                .map(favorito -> videoService.getById(favorito.getVideoId()))
+        var favorites = videoFavoriteService.getFavoritesByUser(userId);
+        return favorites.stream()
+                .map(favorite -> videoService.getById(favorite.getVideoId()))
                 .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(Video::getCategory, Collectors.counting()));
     }

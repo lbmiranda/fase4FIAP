@@ -4,7 +4,7 @@ import com.fase4FIAP.streaming.domain.model.Video;
 
 import java.util.List;
 
-public interface IVideoRecommendationService {
+public interface IRecommendationVideoService {
 
-    List<Video> recommendVideos(String usuarioId);
+    List<Video> recommendVideos(String userId);
 }

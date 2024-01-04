@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VideoFavoriteRequest {
+public class FavoriteVideoRequest {
 
     @NotNull(message = "O ID do usuário não pode ser nulo.")
     private String userId;

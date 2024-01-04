@@ -1,11 +1,11 @@
 package com.fase4FIAP.streaming.useCase.implementation;
 
 import com.fase4FIAP.streaming.application.exceptions.NotFoundException;
+import com.fase4FIAP.streaming.domain.repository.UserRepository;
 import com.fase4FIAP.streaming.useCase.contract.IUserService;
 import com.fase4FIAP.streaming.domain.dto.request.UserRequest;
 import com.fase4FIAP.streaming.domain.dto.response.UserResponse;
 import com.fase4FIAP.streaming.domain.model.User;
-import com.fase4FIAP.streaming.domain.repository.UserRepositoy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +17,16 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
 
-    private final UserRepositoy userRepositoy;
+    private final UserRepository userRepository;
 
     @Override
     public UserResponse create(UserRequest request) {
-        return UserResponse.of(userRepositoy.save(User.of(request)));
+        return UserResponse.of(userRepository.save(User.of(request)));
     }
 
     @Override
     public List<UserResponse> getAll() {
-        return userRepositoy.findAll()
+        return userRepository.findAll()
                 .stream()
                 .map(UserResponse::of)
                 .toList();
@@ -39,19 +39,19 @@ public class UserService implements IUserService {
 
     @Override
     public UserResponse update(String id, UserRequest request) {
-        var usuario = findById(id);
-        copyProperties(request, usuario, "id");
-        return UserResponse.of(userRepositoy.save(usuario));
+        var user = findById(id);
+        copyProperties(request, user, "id");
+        return UserResponse.of(userRepository.save(user));
     }
 
     @Override
     public void delete(String id) {
         findById(id);
-        userRepositoy.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     private User findById(String id) {
-        return userRepositoy.findById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario não encontrado com o id: " + id));
     }
 }

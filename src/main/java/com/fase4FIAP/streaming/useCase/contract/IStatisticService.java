@@ -1,8 +1,8 @@
 package com.fase4FIAP.streaming.useCase.contract;
 
-import com.fase4FIAP.streaming.domain.dto.response.StatisticVideoResponse;
+import com.fase4FIAP.streaming.domain.dto.response.VideoStatisticResponse;
 
 public interface IStatisticService {
 
-    StatisticVideoResponse calculateStatistics();
+    VideoStatisticResponse calculateStatistics();
 }

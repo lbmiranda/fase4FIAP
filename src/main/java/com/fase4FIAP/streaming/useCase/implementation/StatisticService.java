@@ -1,7 +1,7 @@
 package com.fase4FIAP.streaming.useCase.implementation;
 
 import com.fase4FIAP.streaming.useCase.contract.IStatisticService;
-import com.fase4FIAP.streaming.domain.dto.response.StatisticVideoResponse;
+import com.fase4FIAP.streaming.domain.dto.response.VideoStatisticResponse;
 import com.fase4FIAP.streaming.domain.model.Video;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,23 +15,23 @@ import java.util.Optional;
 public class StatisticService implements IStatisticService {
 
     private final VideoService videoService;
-    private final VideoFavoriteService videoFavoritoService;
+    private final FavoriteVideoService videoFavoriteService;
 
     @Override
-    public StatisticVideoResponse calculateStatistics() {
-        var totalVideos = counterVideos();
-        var totalFavorites = counterFavorites();
+    public VideoStatisticResponse calculateStatistics() {
+        var totalVideos = videosCounter();
+        var totalFavorites = favoritesCounter();
         var previewAverage = calculateAverageViews(totalVideos);
 
-        return new StatisticVideoResponse(totalVideos, totalFavorites, previewAverage);
+        return new VideoStatisticResponse(totalVideos, totalFavorites, previewAverage);
     }
 
-    private long counterVideos() {
+    private long videosCounter() {
         return safelyBlock(videoService.getAllVideos().count());
     }
 
-    private int counterFavorites() {
-        return safelyGetSize(videoFavoritoService.getAll());
+    private int favoritesCounter() {
+        return safelyGetSize(videoFavoriteService.getAll());
     }
 
     private float calculateAverageViews(long totalVideos) {

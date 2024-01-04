@@ -1,6 +1,6 @@
 package com.fase4FIAP.streaming.application.controller;
 
-import com.fase4FIAP.streaming.useCase.implementation.VideoRecommendationService;
+import com.fase4FIAP.streaming.useCase.implementation.RecommendationVideoService;
 import com.fase4FIAP.streaming.domain.model.Video;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +13,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/video-recommendation")
-public class VideoRecommendationControler {
+public class RecommendationVideoController {
 
-    private final VideoRecommendationService service;
+    private final RecommendationVideoService recommendationVideoService;
 
     @GetMapping
     public List<Video> recommendVideos(@RequestParam String userId) {
-        return service.recommendVideos(userId);
+        return recommendationVideoService.recommendVideos(userId);
     }
 }

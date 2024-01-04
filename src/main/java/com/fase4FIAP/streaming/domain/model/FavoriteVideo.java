@@ -1,6 +1,6 @@
 package com.fase4FIAP.streaming.domain.model;
 
-import com.fase4FIAP.streaming.domain.dto.request.VideoFavoriteRequest;
+import com.fase4FIAP.streaming.domain.dto.request.FavoriteVideoRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "videosFavoritos")
-public class VideoFavorite {
+public class FavoriteVideo {
 
     @Id
     private String id;
@@ -23,8 +23,8 @@ public class VideoFavorite {
     private String videoId;
     private LocalDate creationDate;
 
-    public static VideoFavorite of(VideoFavoriteRequest request) {
-        var response = new VideoFavorite();
+    public static FavoriteVideo of(FavoriteVideoRequest request) {
+        var response = new FavoriteVideo();
         copyProperties(request, response);
         return response;
     }

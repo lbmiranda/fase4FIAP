@@ -10,13 +10,13 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 
 @Repository
-public interface VideoReactiveRepository extends ReactiveCrudRepository<Video, String> {
+public interface ReactiveVideoRepository extends ReactiveCrudRepository<Video, String> {
 
     Flux<Video> findByTitleContaining(String title);
 
     Flux<Video> findByPublicationDate(LocalDate date);
 
-    Mono<Video> findByNameFile(String videoId);
+    Mono<Video> findByFileName(String videoId);
 
     Flux<Video> findByCategory(Category category);
 

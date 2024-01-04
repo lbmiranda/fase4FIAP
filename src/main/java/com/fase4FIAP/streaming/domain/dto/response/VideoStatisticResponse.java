@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatisticVideoResponse {
+public class VideoStatisticResponse {
 
     private long totalVideos;
     private long totalFavorites;

@@ -1,7 +1,7 @@
 package com.fase4FIAP.streaming.useCase.contract;
 
 import com.fase4FIAP.streaming.domain.dto.request.VideoRequest;
-import com.fase4FIAP.streaming.domain.dto.response.VideoDeleteResponse;
+import com.fase4FIAP.streaming.domain.dto.response.DeleteVideoResponse;
 import com.fase4FIAP.streaming.domain.dto.response.VideoUploadResponse;
 import com.fase4FIAP.streaming.domain.model.Video;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ public interface IVideoService {
 
     Video getById(String id);
 
-    public Mono<VideoDeleteResponse> deleteVideo(String videoId);
+    public Mono<DeleteVideoResponse> deleteVideo(String videoId);
 
     Flux<Video> findVideoByTitle(String query);
 

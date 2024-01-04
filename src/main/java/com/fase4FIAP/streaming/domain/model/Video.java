@@ -40,7 +40,7 @@ public class Video {
         return response;
     }
 
-    public void incrementaView() {
+    public void incrementView() {
         this.view += 1;
     }
 }

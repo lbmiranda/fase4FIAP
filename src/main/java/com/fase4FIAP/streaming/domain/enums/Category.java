@@ -2,12 +2,13 @@ package com.fase4FIAP.streaming.domain.enums;
 
 public enum Category {
 
-    MUSICA("Musica"),
-    EDUCACAO("Educacao"),
-    ENTRETENIMENTO("Entretenimento"),
-    ESPORTES("Esportes"),
-    NOTICIAS("Noticias"),
-    OUTROS("Outros");
+    MUSIC("Music"),
+    EDUCATION("Education"),
+
+    ENTERTAINMENT("Entertainment"),
+    SPORTS("Sports"),
+    NOTICES("Notices"),
+    OTHERS("Others");
 
     private final String categoryName;
 
