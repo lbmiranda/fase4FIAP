@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-public class UserRepositoryTest {
+class UserRepositoryTest {
 
     final String id = "c1229ad8-e869-4cf0-bf1b-de193465248b";
 
@@ -47,6 +47,7 @@ public class UserRepositoryTest {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
+    // TODO - Também fazer o teste em relação ao update
 //    @Test
 //    void allowUpdateUser(){
 //        var userOld = UserHelper.createUser();
@@ -70,7 +71,7 @@ public class UserRepositoryTest {
 //    }
 
     @Test
-    void allowDeleteUser() {
+    void allowDeleteByIdUser() {
         doNothing().when(userRepository).deleteById(any(String.class));
 
         userRepository.deleteById(id);
@@ -80,7 +81,7 @@ public class UserRepositoryTest {
 
 
     @Test
-    void allowFilterUser() {
+    void allowFindByIdUser() {
         var user = UserHelper.createUser();
         when(userRepository.findById(any(String.class))).thenReturn(Optional.of(user));
 
@@ -100,7 +101,7 @@ public class UserRepositoryTest {
 
 
     @Test
-    void allowToListUsers() {
+    void allowFindAllUsers() {
         var user1 = UserHelper.createUser();
         var user2 = UserHelper.createUser();
         var user3 = UserHelper.createUser();
