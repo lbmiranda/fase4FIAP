@@ -1,6 +1,7 @@
 package com.fase4FIAP.streaming.domain.model;
 
 import com.fase4FIAP.streaming.domain.dto.request.UserRequest;
+import com.fase4FIAP.streaming.domain.dto.response.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +29,5 @@ public class User {
         copyProperties(request, response);
         return response;
     }
+    
 }
