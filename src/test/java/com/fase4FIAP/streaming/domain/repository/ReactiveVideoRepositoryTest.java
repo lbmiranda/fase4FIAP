@@ -1,5 +1,6 @@
 package com.fase4FIAP.streaming.domain.repository;
 
+import com.fase4FIAP.streaming.domain.enums.Category;
 import com.fase4FIAP.streaming.domain.model.Video;
 import com.fase4FIAP.streaming.utils.VideoHelper;
 import org.junit.jupiter.api.AfterEach;
@@ -90,4 +91,36 @@ class ReactiveVideoRepositoryTest {
 
         Mockito.verify(reactiveVideoRepository, times(1)).deleteById(videoId);
     }
+
+    @Test
+    void allowFindByCategoryReactiveVideo(){
+        var category = Category.ENTERTAINMENT;
+        var reactiveVideo1 = VideoHelper.createVideo();
+        var reactiveVideo2 = VideoHelper.createVideo();
+        var reactiveVideo3 = VideoHelper.createVideo();
+        var listReactiveVideos = Arrays.asList(reactiveVideo1, reactiveVideo2, reactiveVideo3);
+        when(reactiveVideoRepository.findByCategory(any(Category.class))).thenReturn(Flux.fromIterable(listReactiveVideos));
+
+        var listFilter = reactiveVideoRepository.findByCategory(category);
+
+        assertEquals(listReactiveVideos, listFilter.collectList().block());
+        verify(reactiveVideoRepository, times(1)).findByCategory(category);
+    }
+
+    @Test
+    void allowFindByTitleContainingIgnoreCaseReactiveVideo(){
+        String title = "BREAKING BAD";
+        var reactiveVideo1 = VideoHelper.createVideo();
+        var reactiveVideo2 = VideoHelper.createVideo();
+        var reactiveVideo3 = VideoHelper.createVideo();
+        var listReactiveVideos = Arrays.asList(reactiveVideo1, reactiveVideo2, reactiveVideo3);
+        when(reactiveVideoRepository.findByTitleContainingIgnoreCase(any(String.class))).thenReturn(Flux.fromIterable(listReactiveVideos));
+
+        var listFilter = reactiveVideoRepository.findByTitleContainingIgnoreCase(title);
+
+        assertEquals(listReactiveVideos, listFilter.collectList().block());
+        verify(reactiveVideoRepository, times(1)).findByTitleContainingIgnoreCase(title);
+    }
+
+
 }

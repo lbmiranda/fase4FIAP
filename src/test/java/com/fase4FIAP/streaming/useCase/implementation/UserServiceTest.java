@@ -27,5 +27,5 @@ public class UserServiceTest {
         mock.close();
     }
 
-    
+
 }
