@@ -52,7 +52,7 @@
             return;
         }
 
-        fetch('/video-favoritos?usuarioId=' + userId)
+        fetch('/favorites-videos/?userId=' + userId)
             .then(response => response.json())
             .then(favorites => {
                 const favoritesDiv = document.getElementById('favoritesList');
@@ -68,7 +68,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">${favorite.videoId}</h5>
-                                    <p class="card-text">Favoritado em: ${favorite.dataCriacao}</p>
+                                    <p class="card-text">Favoritado em: ${favorite.creationDate}</p>
                                     <button onclick="deleteFavorite('${favorite.id}')" class="btn btn-danger">Remover</button>
                                 </div>
                             </div>

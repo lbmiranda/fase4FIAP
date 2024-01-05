@@ -124,25 +124,25 @@
 
     <form id="uploadForm" enctype="multipart/form-data">
         <label for="videoFile" class="form-label">Selecione um vídeo para carregar:</label>
-        <input type="file" id="videoFile" name="arquivo" accept="video/*" required class="form-control">
+        <input type="file" id="videoFile" name="file" accept="video/*" required class="form-control">
         <br>
         <label for="fileName" class="form-label">Nome do arquivo:</label>
-        <input type="text" id="fileName" name="nomeArquivo" required class="form-control">
+        <input type="text" id="fileName" name="fileName" required class="form-control">
         <br>
-        <label for="titulo" class="form-label">Título:</label>
-        <input type="text" id="titulo" name="titulo" class="form-control">
+        <label for="title" class="form-label">Título:</label>
+        <input type="text" id="title" name="title" class="form-control">
         <br>
-        <label for="descricao" class="form-label">Descrição:</label>
-        <input type="text" id="descricao" name="descricao" class="form-control">
+        <label for="description" class="form-label">Descrição:</label>
+        <input type="text" id="description" name="description" class="form-control">
         <br>
-        <label for="dataPublicacao" class="form-label">Data publicação:</label>
-        <input type="date" id="dataPublicacao" name="dataPublicacao" class="form-control">
+        <label for="publicationDate" class="form-label">Data publicação:</label>
+        <input type="date" id="publicationDate" name="publicationDate" class="form-control">
         <br>
         <div class="mb-3">
-            <label for="categoria">Categoria:</label>
-            <select id="categoria" name="categoria" class="form-select">
-                <option th:each="categoria : ${T(com.fase4FIAP.streaming.domain.enums.Category).values()}"
-                        th:value="${categoria}" th:text="${categoria.getNomeCategoria()}"></option>
+            <label for="category">Categoria:</label>
+            <select id="category" name="category" class="form-select">
+                <option th:each="categoriy : ${T(com.fase4FIAP.streaming.domain.enums.Category).values()}"
+                        th:value="${category}" th:text="${category.getCategoryName()}"></option>
             </select>
         </div>
         <br>
@@ -172,11 +172,11 @@
 
         <div class='container'>
                 <div class="mb-3">
-                    <label for="categoriaFilter">Categoria:</label>
-                    <select id="categoriaFilter" onchange="applyFilters()">
+                    <label for="categoryFilter">Categoria:</label>
+                    <select id="categoryFilter" onchange="applyFilters()">
                         <option value="">Todas</option>
-                        <option th:each="categoria : ${T(com.fase4FIAP.streaming.domain.enums.Category).values()}"
-                                th:value="${categoria}" th:text="${categoria.getNomeCategoria()}"></option>
+                        <option th:each="category : ${T(com.fase4FIAP.streaming.domain.enums.Category).values()}"
+                                th:value="${category}" th:text="${category.getCategoryName()}"></option>
                     </select>
 
                 </div>
@@ -193,10 +193,10 @@
                 </thead>
                 <tbody id="videoList">
                 <tr th:each="video : ${videos}">
-                    <td><a th:href="@{/videos/play/{videoId}(videoId=${video.videoId})}" th:text="${video.titulo}"></a></td>
-                    <td th:text="${video.descricao}"></td>
-                    <td th:text="${video.dataPublicacao}"></td>
-                    <td th:text="${video.categoria}"></td>
+                    <td><a th:href="@{/videos/play/{videoId}(videoId=${video.videoId})}" th:text="${video.title}"></a></td>
+                    <td th:text="${video.description}"></td>
+                    <td th:text="${video.publicationDate}"></td>
+                    <td th:text="${video.category}"></td>
                     <td>
                         <button type="button" onclick="deleteVideo('${video.videoId}')" class="btn btn-danger btn-sm">
                             <i class="fa fa-trash"></i> Deletar
@@ -231,18 +231,18 @@
         const formData = new FormData(form);
 
         const request = {
-            nomeArquivo: formData.get('nomeArquivo'),
-            titulo: formData.get('titulo'),
-            descricao: formData.get('descricao'),
-            dataPublicacao: formData.get('dataPublicacao'),
-            categoria: formData.get('categoria'),
+            fileName: formData.get('fileName'),
+            title: formData.get('title'),
+            description: formData.get('description'),
+            publicationDate: formData.get('publicationDate'),
+            category: formData.get('category'),
         };
 
-        formData.delete('nomeArquivo');
-        formData.delete('titulo');
-        formData.delete('descricao');
-        formData.delete('dataPublicacao');
-        formData.delete('categoria');
+        formData.delete('fileName');
+        formData.delete('title');
+        formData.delete('description');
+        formData.delete('publicationDate');
+        formData.delete('category');
 
         formData.append('request', new Blob([JSON.stringify(request)], { type: "application/json" }));
 
@@ -289,7 +289,7 @@
                 videoList.innerHTML = '';
 
                 data.content.forEach(video => {
-                    if (categoryFilter === '' || video.categoria === categoryFilter) {
+                    if (categoryFilter === '' || video.category === categoryFilter) {
                         createAndAppendVideoRow(video, videoList);
                     }
                 });
@@ -306,7 +306,7 @@
         const tituloCell = document.createElement('td');
         const tituloLink = document.createElement('a');
         tituloLink.href = `#`;
-        tituloLink.textContent = video.titulo;
+        tituloLink.textContent = video.title;
 
         const playVideoHandler = function (event) {
             event.preventDefault();
@@ -319,17 +319,17 @@
         tituloCell.appendChild(tituloLink);
         videoRow.appendChild(tituloCell);
 
-        const descricaoCell = document.createElement('td');
-        descricaoCell.textContent = video.descricao;
-        videoRow.appendChild(descricaoCell);
+        const descriptionCell = document.createElement('td');
+        descriptionCell.textContent = video.description;
+        videoRow.appendChild(descriptionCell);
 
-        const dataPublicacaoCell = document.createElement('td');
-        dataPublicacaoCell.textContent = video.dataPublicacao;
-        videoRow.appendChild(dataPublicacaoCell);
+        const publicationDateCell = document.createElement('td');
+        publicationDateCell.textContent = video.publicationDate;
+        videoRow.appendChild(publicationDateCell);
 
-        const categoriaCell = document.createElement('td');
-        categoriaCell.textContent = video.categoria;
-        videoRow.appendChild(categoriaCell);
+        const categoryCell = document.createElement('td');
+        categoryCell.textContent = video.category;
+        videoRow.appendChild(categoryCell);
 
         const deleteCell = document.createElement('td');
         const deleteButton = document.createElement('button');
@@ -366,7 +366,7 @@
     }
 
     function applyFilters() {
-        const categoriaFilter = document.getElementById('categoriaFilter').value;
+        const categoryFilter = document.getElementById('categoryFilter').value;
 
         fetch('/videos')
             .then(response => response.json())
@@ -375,8 +375,8 @@
                 videoList.innerHTML = '';
 
                 videos.forEach(video => {
-                    if ((categoriaFilter === '' || video.categoria === categoriaFilter) &&
-                        (favoritoFilter === '' || video.favorito.toString() === favoritoFilter)) {
+                    if ((categoryFilter === '' || video.category === categoryFilter) &&
+                        (favoriteFilter === '' || video.favorite.toString() === favoriteFilter)) {
                         createAndAppendVideoRow(video, videoList);
                     }
                 });
@@ -384,10 +384,10 @@
             .catch(error => console.error('Erro ao aplicar filtros:', error));
     }
 
-     function buscarVideoPorTitulo() {
+     function findVideoByTitle() {
         const searchQuery = document.getElementById('searchQuery').value;
 
-        fetch(`/videos/buscar?query=${searchQuery}`)
+        fetch(`/videos/search?query=${searchQuery}`)
             .then(response => response.json())
             .then(videos => {
                 const videoList = document.getElementById('videoList');
@@ -408,10 +408,10 @@
     }
 
     function likeVideo() {
-        const usuarioId = document.getElementById('userId').value;
+        const userId = document.getElementById('userId').value;
         const videoId = lastPlayedVideoId;
 
-        if (!usuarioId || !videoId) {
+        if (!userId || !videoId) {
             alert('Por favor, insira o ID do usuário e reproduza um vídeo antes de curtir.');
             return;
         }
@@ -419,12 +419,12 @@
         const today = new Date().toISOString().split('T')[0];  // Formata a data de hoje como yyyy-mm-dd
 
         const request = {
-            usuarioId: usuarioId,
+            userId: userId,
             videoId: videoId,
-            dataCriacao: today
+            creationDate: today
         };
 
-        fetch('/video-favoritos', {
+        fetch('/favorites-videos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
