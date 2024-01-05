@@ -1,17 +1,13 @@
-package com.fase4FIAP.streaming.dominio.repository;
+package com.fase4FIAP.streaming.domain.repository;
 
-import com.fase4FIAP.streaming.domain.model.Video;
-import com.fase4FIAP.streaming.domain.repository.VideoRepository;
 import com.fase4FIAP.streaming.utils.VideoHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;

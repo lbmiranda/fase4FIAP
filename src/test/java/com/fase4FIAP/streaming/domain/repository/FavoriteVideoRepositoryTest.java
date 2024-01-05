@@ -1,7 +1,6 @@
-package com.fase4FIAP.streaming.dominio.repository;
+package com.fase4FIAP.streaming.domain.repository;
 
 import com.fase4FIAP.streaming.domain.model.FavoriteVideo;
-import com.fase4FIAP.streaming.domain.repository.FavoriteVideoRepository;
 import com.fase4FIAP.streaming.utils.FavoriteVideoHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,8 +1,7 @@
-package com.fase4FIAP.streaming.dominio.model;
+package com.fase4FIAP.streaming.domain.model;
 
 import com.fase4FIAP.streaming.domain.dto.request.VideoRequest;
 import com.fase4FIAP.streaming.domain.enums.Category;
-import com.fase4FIAP.streaming.domain.model.Video;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

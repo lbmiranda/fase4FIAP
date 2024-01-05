@@ -1,7 +1,6 @@
-package com.fase4FIAP.streaming.dominio.repository;
+package com.fase4FIAP.streaming.domain.repository;
 
 import com.fase4FIAP.streaming.domain.model.User;
-import com.fase4FIAP.streaming.domain.repository.UserRepository;
 import com.fase4FIAP.streaming.utils.UserHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
