@@ -38,8 +38,8 @@
         <div class="card-body">
             <h5 class="card-title">Resumo</h5>
             <p class="card-text">Total de Vídeos: <span id="totalVideos">Carregando...</span></p>
-            <p class="card-text">Total de Favoritos: <span id="totalFavoritos">Carregando...</span></p>
-            <p class="card-text">Média de Visualizações: <span id="mediaVisualizacoes">Carregando...</span></p>
+            <p class="card-text">Total de Favoritos: <span id="totalFavorites">Carregando...</span></p>
+            <p class="card-text">Média de Visualizações: <span id="previewAverage">Carregando...</span></p>
         </div>
     </div>
 </div>
@@ -55,8 +55,8 @@
             .then(response => response.json())
             .then(data => {
                 document.getElementById('totalVideos').textContent = data.totalVideos;
-                document.getElementById('totalFavoritos').textContent = data.totalFavoritos;
-                document.getElementById('mediaVisualizacoes').textContent = data.mediaVisualizacoes.toFixed(2);
+                document.getElementById('totalFavorites').textContent = data.totalFavorites;
+                document.getElementById('previewAverage').textContent = data.previewAverages.toFixed(2);
             })
             .catch(error => {
                 console.error('Erro ao buscar estatísticas:', error);
