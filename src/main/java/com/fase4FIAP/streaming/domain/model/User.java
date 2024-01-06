@@ -29,5 +29,11 @@ public class User {
         copyProperties(request, response);
         return response;
     }
+
+    public static User ofResponse(UserResponse response) {
+        var userResponse = new User();
+        copyProperties(response, userResponse);
+        return userResponse;
+    }
     
 }

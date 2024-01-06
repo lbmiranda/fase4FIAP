@@ -47,8 +47,8 @@ public class UserServiceTest {
         var user = new UserRequest("USER", "contato@hotmail.com", "123");
         Mockito.when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
-        var userCreated = userService.create(user);
-
+        var userResponse = userService.create(user);
+        var userCreated = User.ofResponse(userResponse);
 
         assertThat(userCreated).isInstanceOf(User.class).isNotNull();
         assertThat(userCreated.getName()).isEqualTo(user.getName());
