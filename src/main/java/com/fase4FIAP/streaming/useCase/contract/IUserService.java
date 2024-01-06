@@ -2,6 +2,7 @@ package com.fase4FIAP.streaming.useCase.contract;
 
 import com.fase4FIAP.streaming.domain.dto.request.UserRequest;
 import com.fase4FIAP.streaming.domain.dto.response.UserResponse;
+import com.fase4FIAP.streaming.domain.model.User;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface IUserService {
     UserResponse update(String id, UserRequest request);
 
     void delete(String id);
+
+
 }

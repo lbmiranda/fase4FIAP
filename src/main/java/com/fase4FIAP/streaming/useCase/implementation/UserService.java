@@ -50,7 +50,7 @@ public class UserService implements IUserService {
         userRepository.deleteById(id);
     }
 
-    private User findById(String id) {
+    public User findById(String id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario não encontrado com o id: " + id));
     }
