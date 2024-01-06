@@ -41,22 +41,22 @@ public class UserServiceTest {
         mock.close();
     }
 
-    // TODO - Ainda pendente
     @Test
     void allowSaveUser(){
         var user = new UserRequest("USER", "contato@hotmail.com", "123");
         Mockito.when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
-        var userResponse = userService.create(user);
-        var userCreated = User.ofResponse(userResponse);
+        var userCreated = User.ofResponse(userService.create(user));
 
         assertThat(userCreated).isInstanceOf(User.class).isNotNull();
         assertThat(userCreated.getName()).isEqualTo(user.getName());
         assertThat(userCreated.getEmail()).isEqualTo(user.getEmail());
         assertThat(userCreated.getPassword()).isEqualTo(user.getPassword());
-        assertThat(userCreated.getPassword()).isNotNull();
-
+        // TODO - verificar sobre o id
+        verify(userRepository, times(1)).save(userCreated);
     }
+
+    
 
 
 }
