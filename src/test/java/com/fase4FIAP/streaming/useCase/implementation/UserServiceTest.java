@@ -71,7 +71,7 @@ public class UserServiceTest {
         assertThat(listFilter).hasSize(3);
         verify(userRepository, times(1)).findAll();
     }
-    
+
     @Test
     void allowGetById(){
         var user = UserHelper.createUser();

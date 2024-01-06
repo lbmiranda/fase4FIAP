@@ -1,6 +1,7 @@
 package com.fase4FIAP.streaming.domain.model;
 
 import com.fase4FIAP.streaming.domain.dto.request.FavoriteVideoRequest;
+import com.fase4FIAP.streaming.domain.dto.response.FavoriteVideoResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,5 +30,11 @@ public class FavoriteVideo {
         var response = new FavoriteVideo();
         copyProperties(request, response);
         return response;
+    }
+
+    public static FavoriteVideo ofResponse(FavoriteVideoResponse response) {
+        var favoriteVideoResponse = new FavoriteVideo();
+        copyProperties(response, favoriteVideoResponse);
+        return favoriteVideoResponse;
     }
 }
