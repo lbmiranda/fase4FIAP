@@ -24,4 +24,5 @@ public class FavoriteVideoResponse {
         copyProperties(favoriteVideo, response);
         return response;
     }
+
 }

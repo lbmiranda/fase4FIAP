@@ -10,6 +10,7 @@ import com.fase4FIAP.streaming.utils.UserHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -34,7 +35,7 @@ public class UserServiceTest {
     AutoCloseable mock;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         mock = MockitoAnnotations.openMocks(this);
         userService = new UserService(userRepository);
     }
@@ -45,7 +46,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void allowSaveUser(){
+    void allowSaveUser() {
         var user = new UserRequest("USER", "contato@hotmail.com", "123");
         Mockito.when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
@@ -59,7 +60,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void allowGetAllUsers(){
+    void allowGetAllUsers() {
         var user1 = UserHelper.createUser();
         var user2 = UserHelper.createUser();
         var user3 = UserHelper.createUser();
@@ -73,7 +74,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void allowGetById(){
+    void allowGetByIdUser() {
         var user = UserHelper.createUser();
         when(userRepository.findById(any(String.class))).thenReturn(Optional.of(user));
 
@@ -83,7 +84,17 @@ public class UserServiceTest {
     }
 
     @Test
-    void allowUpdateUser(){
+    void generateNotFoundExceptionGetByIdUser() {
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userService.getById(id))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Usuario não encontrado com o id: " + id);
+        verify(userRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void allowUpdateUser() {
         var userOld = new UserRequest("USER", "contato@hotmail.com", "123");
 
         var user = new User();
@@ -108,7 +119,19 @@ public class UserServiceTest {
     }
 
     @Test
-    void allowDeleteByIdUser(){
+    void generateNotFoundExceptionUpdateUser() {
+        var user = new UserRequest("USER", "contato@hotmail.com", "123");
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userService.update(id, user))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Usuario não encontrado com o id: " + id);
+        verify(userRepository, times(1)).findById(id);
+
+    }
+
+    @Test
+    void allowDeleteByIdUser() {
         var user = UserHelper.createUser();
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
         doNothing().when(userRepository).deleteById(id);
@@ -119,7 +142,15 @@ public class UserServiceTest {
         verify(userRepository, times(1)).deleteById(any(String.class));
     }
 
-    
+    @Test
+    void generateNotFoundExceptionDeleteByIdUser() {
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userService.delete(id))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Usuario não encontrado com o id: " + id);
+        verify(userRepository, times(1)).findById(id);
+    }
 
 
 }
