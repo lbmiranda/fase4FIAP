@@ -3,7 +3,6 @@ package com.fase4FIAP.streaming.useCase.implementation;
 import com.fase4FIAP.streaming.application.exceptions.AlreadyFavoritedException;
 import com.fase4FIAP.streaming.application.exceptions.NotFoundException;
 import com.fase4FIAP.streaming.domain.dto.request.FavoriteVideoRequest;
-import com.fase4FIAP.streaming.domain.dto.response.FavoriteVideoResponse;
 import com.fase4FIAP.streaming.domain.model.FavoriteVideo;
 import com.fase4FIAP.streaming.domain.repository.FavoriteVideoRepository;
 import com.fase4FIAP.streaming.useCase.contract.IFavoriteVideoService;

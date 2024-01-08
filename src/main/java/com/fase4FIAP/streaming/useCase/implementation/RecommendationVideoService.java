@@ -17,11 +17,13 @@ import java.util.stream.Collectors;
 public class RecommendationVideoService implements IRecommendationVideoService {
 
     private final VideoService videoService;
-    private final FavoriteVideoService videoFavoriteService;
+    private final FavoriteVideoService favoriteVideoService;
 
     @Override
     public List<Video> recommendVideos(String userId) {
         var categoriesFavorites = getCategoriesFavorites(userId);
+
+
 
         var categoriesSort = categoriesFavorites.entrySet()
                 .stream()
@@ -32,7 +34,7 @@ public class RecommendationVideoService implements IRecommendationVideoService {
     }
 
     private Map<Category, Long> getCategoriesFavorites(String userId) {
-        var favorites = videoFavoriteService.getFavoritesByUser(userId);
+        var favorites = favoriteVideoService.getFavoritesByUser(userId);
         return favorites.stream()
                 .map(favorite -> videoService.getById(favorite.getVideoId()))
                 .filter(Objects::nonNull)

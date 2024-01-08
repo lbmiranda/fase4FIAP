@@ -27,7 +27,7 @@ public class VideoService implements IVideoService {
 
     private final ReactiveVideoRepository reactiveVideoRepository;
     private final VideoRepository videoRepository;
-    private final FavoriteVideoService videoFavoriteService;
+    private final FavoriteVideoService favoriteVideoService;
 
     public Mono<VideoUploadResponse> uploadVideo(MultipartFile file, VideoRequest request) {
         return Mono.fromCallable(file::getBytes)
@@ -74,7 +74,7 @@ public class VideoService implements IVideoService {
     }
 
     public List<Video> findByCategoryAndNotFavoritedByUser(Category category, String userId) {
-        var idsFavorites = videoFavoriteService.getFavoritesByUser(userId)
+        var idsFavorites = favoriteVideoService.getFavoritesByUser(userId)
                 .stream()
                 .map(FavoriteVideoResponse::getVideoId)
                 .toList();
@@ -96,7 +96,7 @@ public class VideoService implements IVideoService {
 
 
     @Override
-    public Flux<Video> findVideoByTitle (String query) {
+    public Flux<Video> findVideoByTitle(String query) {
         return reactiveVideoRepository.findByTitleContainingIgnoreCase(query);
     }
 
