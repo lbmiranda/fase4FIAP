@@ -15,7 +15,7 @@ import java.util.Optional;
 public class StatisticService implements IStatisticService {
 
     private final VideoService videoService;
-    private final FavoriteVideoService videoFavoriteService;
+    private final FavoriteVideoService favoriteVideoService;
 
     @Override
     public VideoStatisticResponse calculateStatistics() {
@@ -31,7 +31,7 @@ public class StatisticService implements IStatisticService {
     }
 
     private int favoritesCounter() {
-        return safelyGetSize(videoFavoriteService.getAll());
+        return safelyGetSize(favoriteVideoService.getAll());
     }
 
     private float calculateAverageViews(long totalVideos) {
