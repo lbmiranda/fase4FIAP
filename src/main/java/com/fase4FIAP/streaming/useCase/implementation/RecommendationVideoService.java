@@ -23,8 +23,6 @@ public class RecommendationVideoService implements IRecommendationVideoService {
     public List<Video> recommendVideos(String userId) {
         var categoriesFavorites = getCategoriesFavorites(userId);
 
-
-
         var categoriesSort = categoriesFavorites.entrySet()
                 .stream()
                 .sorted(Map.Entry.<Category, Long>comparingByValue().reversed())
