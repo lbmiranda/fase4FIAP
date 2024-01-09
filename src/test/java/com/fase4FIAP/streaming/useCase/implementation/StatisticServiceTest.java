@@ -1,21 +1,27 @@
 package com.fase4FIAP.streaming.useCase.implementation;
 
+import com.fase4FIAP.streaming.application.exceptions.NotFoundException;
+import com.fase4FIAP.streaming.domain.dto.response.FavoriteVideoResponse;
 import com.fase4FIAP.streaming.domain.repository.FavoriteVideoRepository;
 import com.fase4FIAP.streaming.domain.repository.ReactiveVideoRepository;
 import com.fase4FIAP.streaming.domain.repository.VideoRepository;
 import com.fase4FIAP.streaming.useCase.contract.IStatisticService;
+import com.fase4FIAP.streaming.utils.FavoriteVideoHelper;
 import com.fase4FIAP.streaming.utils.VideoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 public class StatisticServiceTest {
 
@@ -39,6 +45,7 @@ public class StatisticServiceTest {
         mock = MockitoAnnotations.openMocks(this);
         favoriteVideoService = new FavoriteVideoService(favoriteVideoRepository);
         videoService = new VideoService(reactiveVideoRepository, videoRepository, favoriteVideoService);
+        statisticService = new StatisticService(videoService, favoriteVideoService);
     }
     @Test
     void allowCalculateTotalVideos(){
@@ -46,19 +53,37 @@ public class StatisticServiceTest {
         var video2 = VideoHelper.createVideo();
         var video3 = VideoHelper.createVideo();
 
-        reactiveVideoRepository.save(video1);
-        reactiveVideoRepository.save(video2);
-        reactiveVideoRepository.save(video3);
-        var totalVideos = videoService.getAllVideos().count();
+        when(reactiveVideoRepository.findAll()).thenReturn(Flux.just(video1, video2, video3));
+
+        var totalVideos = videoService.getAllVideos().count().block();
 
         assertThat(totalVideos).isEqualTo(3L);
-        verify(reactiveVideoRepository, times(3)).save();
         verify(reactiveVideoRepository, times(1)).findAll();
-
     }
 
-//    @Test
-//    void generateExceptionCalculateTotalVideos(){
+    @Test
+    void generateExceptionCalculateTotalVideos(){
+        when(reactiveVideoRepository.findAll()).thenReturn(Flux.error(new RuntimeException("Simulando uma exceção")));
+
+        assertThatThrownBy(() -> videoService.getAllVideos().count().block())
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Simulando uma exceção");
+
+        verify(reactiveVideoRepository, times(1)).findAll();
+    }
+
+    // TODO - AINDA PENDENTE
+    @Test
+    void allowFavoritesCounter(){
+//        var favoriteVideo1 = FavoriteVideoHelper.createFavoriteVideo();
+//        var favoriteVideo2 = FavoriteVideoHelper.createFavoriteVideo();
+//        var favoriteVideo3 = FavoriteVideoHelper.createFavoriteVideo();
+//        var listOfFavoritesVideos = Arrays.asList(favoriteVideo1, favoriteVideo2, favoriteVideo3);
 //
-//    }
+//        when(favoriteVideoRepository.findAll()).thenReturn(listOfFavoritesVideos);
+//
+//        statisticService.calculateStatistics();
+//
+//        verify(favoriteVideoRepository, times(1)).findAll();
+    }
 }
