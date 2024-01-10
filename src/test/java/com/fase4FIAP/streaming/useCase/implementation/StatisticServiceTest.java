@@ -2,6 +2,8 @@ package com.fase4FIAP.streaming.useCase.implementation;
 
 import com.fase4FIAP.streaming.application.exceptions.NotFoundException;
 import com.fase4FIAP.streaming.domain.dto.response.FavoriteVideoResponse;
+import com.fase4FIAP.streaming.domain.dto.response.VideoStatisticResponse;
+import com.fase4FIAP.streaming.domain.model.Video;
 import com.fase4FIAP.streaming.domain.repository.FavoriteVideoRepository;
 import com.fase4FIAP.streaming.domain.repository.ReactiveVideoRepository;
 import com.fase4FIAP.streaming.domain.repository.VideoRepository;
@@ -14,13 +16,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class StatisticServiceTest {
@@ -47,6 +49,13 @@ public class StatisticServiceTest {
         videoService = new VideoService(reactiveVideoRepository, videoRepository, favoriteVideoService);
         statisticService = new StatisticService(videoService, favoriteVideoService);
     }
+
+    @Test
+    void allowCalculateStatistic(){
+        fail("Teste não implementado.");
+    }
+
+
     @Test
     void allowCalculateTotalVideos(){
         var video1 = VideoHelper.createVideo();
@@ -72,18 +81,31 @@ public class StatisticServiceTest {
         verify(reactiveVideoRepository, times(1)).findAll();
     }
 
-    // TODO - AINDA PENDENTE
+
     @Test
     void allowFavoritesCounter(){
-//        var favoriteVideo1 = FavoriteVideoHelper.createFavoriteVideo();
-//        var favoriteVideo2 = FavoriteVideoHelper.createFavoriteVideo();
-//        var favoriteVideo3 = FavoriteVideoHelper.createFavoriteVideo();
-//        var listOfFavoritesVideos = Arrays.asList(favoriteVideo1, favoriteVideo2, favoriteVideo3);
+        var favoriteVideo1 = FavoriteVideoHelper.createFavoriteVideo();
+        var favoriteVideo2 = FavoriteVideoHelper.createFavoriteVideo();
+        var favoriteVideo3 = FavoriteVideoHelper.createFavoriteVideo();
+        var listOfFavoritesVideos = Arrays.asList(favoriteVideo1, favoriteVideo2, favoriteVideo3);
+
+        when(favoriteVideoRepository.findAll()).thenReturn(listOfFavoritesVideos);
+
+        var totalVideos = favoriteVideoService.getAll();
+
+        assertThat(totalVideos).hasSize(3);
+        verify(favoriteVideoRepository, times(1)).findAll();
+    }
+
+    // TODO - AINDA PENDENTE
+    @Test
+    void allowPreviewAverage(){
+//        var video1 = VideoHelper.createVideo();
+//        var video2 = VideoHelper.createVideo();
+//        var video3 = VideoHelper.createVideo();
 //
-//        when(favoriteVideoRepository.findAll()).thenReturn(listOfFavoritesVideos);
-//
-//        statisticService.calculateStatistics();
-//
-//        verify(favoriteVideoRepository, times(1)).findAll();
+//        when(reactiveVideoRepository.findAll()).thenReturn(Flux.just(video1, video2, video3));
+        fail("Teste não implementado");
+
     }
 }

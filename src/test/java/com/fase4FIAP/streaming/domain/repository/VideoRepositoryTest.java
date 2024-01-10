@@ -31,48 +31,6 @@ class VideoRepositoryTest {
         openMocks.close();
     }
 
-//    @Test
-//    void allowSaveVideo(){
-//        var video = VideoHelper.createVideo();
-//        Mockito.when(videoRepository.save(any(Video.class))).thenReturn(video);
-//
-//        var videoCreated = videoRepository.save(video);
-//
-//        assertThat(videoCreated).isNotNull().isEqualTo(video);
-//        verify(videoRepository, times(1)).save(any(Video.class));
-//    }
-//
-//    @Test
-//    void allowDeleteByIdVideo(){
-//        doNothing().when(videoRepository).deleteById(any(String.class));
-//
-//        videoRepository.deleteById(videoId);
-//
-//        verify(videoRepository, times(1)).deleteById(any(String.class));
-//    }
-//
-//    @Test
-//    void allowFindByIdVideo(){
-//        var video = VideoHelper.createVideo();
-//        when(videoRepository.findById(any(String.class))).thenReturn(Optional.of(video));
-//
-//        var videoFilter = videoRepository.findById(videoId);
-//
-//        assertThat(videoFilter).isPresent().containsSame(video);
-//        videoFilter.ifPresent(search -> {
-//            assertThat(search.getVideoId()).isEqualTo(video.getVideoId());
-//            assertThat(search.getTitle()).isEqualTo(video.getTitle());
-//            assertThat(search.getDescription()).isEqualTo(video.getDescription());
-//            assertThat(search.getVideoData()).isEqualTo(video.getVideoData());
-//            assertThat(search.getFileName()).isEqualTo(video.getFileName());
-//            assertThat(search.getPublicationDate()).isEqualTo(video.getPublicationDate());
-//            assertThat(search.getCategory()).isEqualTo(video.getCategory());
-//            assertThat(search.getView()).isEqualTo(video.getView());
-//
-//        });
-//
-//        verify(videoRepository, times(1)).findById(any(String.class));
-//    }
 
     @Test
     void allowFindAllVideos() {
