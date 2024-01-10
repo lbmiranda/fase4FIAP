@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/favorite")
-public class FavoriteVideoPageController {
+public class FavoriteController {
 
     @GetMapping
     public String favoriteVideo() {
