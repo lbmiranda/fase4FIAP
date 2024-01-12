@@ -1,18 +1,34 @@
 package com.fase4FIAP.streaming.application.controller;
 
+import com.fase4FIAP.streaming.domain.dto.request.FavoriteVideoRequest;
 import com.fase4FIAP.streaming.useCase.implementation.FavoriteVideoService;
 import com.fase4FIAP.streaming.useCase.implementation.RecommendationVideoService;
+import com.fase4FIAP.streaming.utils.VideoHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static reactor.core.publisher.Mono.when;
 
 class RecommendationVideoControllerTest {
+
+    final String baseUrl = "/video-recommendation";
+    final String baseUrlID = "/video-recommendation/{id}";
+
+    final String userId = "987654";
 
     private MockMvc mockMvc;
 
@@ -38,7 +54,14 @@ class RecommendationVideoControllerTest {
     }
 
     @Test
-    void allowRecommnedVideos(){
-        fail("Teste não implementado.");
+    void allowRecommnedVideos() throws Exception {
+        var video1 = VideoHelper.createVideo();
+        var video2 = VideoHelper.createVideo();
+        var video3 = VideoHelper.createVideo();
+        var listOfVideos = Arrays.asList(video1, video2, video3);
+        Mockito.when(recommendationVideoService.recommendVideos(any(String.class))).thenReturn(listOfVideos);
+
+        mockMvc.perform(get(baseUrl).param("userId", userId)).andExpect(status().isOk());
+        verify(recommendationVideoService, times(1)).recommendVideos(userId);
     }
 }

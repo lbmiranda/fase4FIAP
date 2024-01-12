@@ -20,8 +20,7 @@ public class JsonString {
         javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(formatter));
 
         objectMapper.registerModule(javaTimeModule);
-        LocalDateTime now = LocalDateTime.now();
 
-        return objectMapper.writeValueAsString(now);
+        return objectMapper.writeValueAsString(object);
     }
 }

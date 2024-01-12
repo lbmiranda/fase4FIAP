@@ -1,13 +1,11 @@
 package com.fase4FIAP.streaming.application.controller;
 
-import com.fase4FIAP.streaming.application.exceptions.NotFoundException;
 import com.fase4FIAP.streaming.domain.dto.request.UserRequest;
 import com.fase4FIAP.streaming.domain.dto.response.UserResponse;
 import com.fase4FIAP.streaming.domain.model.User;
 import com.fase4FIAP.streaming.useCase.implementation.UserService;
 import com.fase4FIAP.streaming.utils.UserHelper;
 import com.google.gson.Gson;
-import net.bytebuddy.implementation.bytecode.assign.TypeCasting;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
