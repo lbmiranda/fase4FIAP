@@ -97,7 +97,7 @@ public class StatisticServiceTest {
         verify(favoriteVideoRepository, times(1)).findAll();
     }
 
-    // TODO - AINDA PENDENTE
+    // TODO - Simular situação para testar
     @Test
     void allowPreviewAverage(){
 //        var video1 = VideoHelper.createVideo();

@@ -1,5 +1,6 @@
 package com.fase4FIAP.streaming.application.controller;
 
+import com.fase4FIAP.streaming.application.exceptions.NotFoundException;
 import com.fase4FIAP.streaming.domain.dto.request.UserRequest;
 import com.fase4FIAP.streaming.domain.dto.response.UserResponse;
 import com.fase4FIAP.streaming.domain.model.User;
@@ -36,7 +37,7 @@ class UserControllerTest {
     final String baseUrl = "/users";
     final String baseUrlID = "/users/{id}";
 
-    final String id = "123ABC";
+    String id = "123ABC";
 
     private MockMvc mockMvc;
 
@@ -103,18 +104,14 @@ class UserControllerTest {
         verify(userService, times(1)).getById(id);
     }
 
-    // TODO - Ainda pendente
+    // TODO - Espera receber 404 mas recebe 200
     @Test
     void generateExceptionNotFoundException() throws Exception {
-//        String newId = "159457";
-//        when(userService.findById(any(String.class))).thenThrow(NotFoundException.class);
-//
-//        mockMvc.perform(get(baseUrlID, newId))
-//                .andExpect(status().isBadRequest());
-//
-//        verify(userService, times(1)).findById(newId);
-    fail("Teste não implementado.");
+        when(userService.findById(any(String.class))).thenThrow(NotFoundException.class);
 
+        mockMvc.perform(get(baseUrlID, id)).andExpect(status().isNotFound());
+
+        verify(userService, times(1)).findById(id);
     }
 
     @Test
