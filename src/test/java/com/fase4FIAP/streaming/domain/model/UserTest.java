@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class UserTest {
 
     @Test
-    void deveConverterUsuarioRequestEmUsuario(){
+    void allowConvertUser(){
         String name = "Usuário Teste";
         String email = "contato@hotmail.com";
         String password = "123ABC";

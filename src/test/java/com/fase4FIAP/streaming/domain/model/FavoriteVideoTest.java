@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FavoriteVideoTest {
 
     @Test
-    void deveConverterVideoFavoritoRequestEmVideoFavorito(){
+    void allowConvertFavoriteVideo(){
         String userId = "123abc";
         String videoId = "181715";
         LocalDate creationDate = LocalDate.now();

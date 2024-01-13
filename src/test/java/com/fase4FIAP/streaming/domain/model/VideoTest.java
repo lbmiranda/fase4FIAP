@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class VideoTest {
 
     @Test
-    void deveConverterVideoRequestEmVideo() throws IOException {
+    void allowConvertVideo() throws IOException {
         String title = "Breaking Bad";
         String description = "Piloto";
         String fileName = "breaking_bad.mp4";
         LocalDate publicationDate = LocalDate.of(2008,1,20);
         Category category = Category.ENTERTAINMENT;
-        String favorite = ""; // TODO VERIFICAR A LÓGICA DO FAVORITO
+        String favorite = "";
 
         VideoRequest videoRequest = new VideoRequest(title, description, fileName, publicationDate.toString(), category.getCategoryName(), favorite);
         Video video = Video.of(fileName.getBytes(), videoRequest);
@@ -31,7 +31,7 @@ class VideoTest {
     }
 
     @Test
-    void deveValidarIncrementoDeView(){
+    void allowIncrementView(){
 
         String videoId = "123456";
         String title = "Breaking Bad";
