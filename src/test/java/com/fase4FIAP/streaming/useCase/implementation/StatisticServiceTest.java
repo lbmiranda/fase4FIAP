@@ -25,7 +25,7 @@ import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class StatisticServiceTest {
+class StatisticServiceTest {
 
     private IStatisticService statisticService;
     private VideoService videoService;

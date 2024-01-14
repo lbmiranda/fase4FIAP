@@ -1,13 +1,10 @@
 package com.fase4FIAP.streaming.useCase.implementation;
 
 import com.fase4FIAP.streaming.domain.enums.Category;
-import com.fase4FIAP.streaming.domain.model.FavoriteVideo;
 import com.fase4FIAP.streaming.domain.repository.FavoriteVideoRepository;
 import com.fase4FIAP.streaming.domain.repository.ReactiveVideoRepository;
 import com.fase4FIAP.streaming.domain.repository.VideoRepository;
-import com.fase4FIAP.streaming.useCase.contract.IFavoriteVideoService;
 import com.fase4FIAP.streaming.useCase.contract.IRecommendationVideoService;
-import com.fase4FIAP.streaming.useCase.contract.IVideoService;
 import com.fase4FIAP.streaming.utils.FavoriteVideoHelper;
 import com.fase4FIAP.streaming.utils.VideoHelper;
 import org.junit.jupiter.api.AfterEach;
@@ -18,16 +15,13 @@ import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.OPTIONAL;
 import static org.mockito.Mockito.*;
 
-public class RecommendationVideoServiceTest {
+class RecommendationVideoServiceTest {
 
     private IRecommendationVideoService recommendationVideoService;
     private VideoService videoService;

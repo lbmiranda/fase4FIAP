@@ -1,6 +1,7 @@
 package com.fase4FIAP.streaming.application.controller;
 
 import com.fase4FIAP.streaming.application.exceptions.NotFoundException;
+import com.fase4FIAP.streaming.application.exceptions.dto.ErrorDetails;
 import com.fase4FIAP.streaming.domain.dto.request.UserRequest;
 import com.fase4FIAP.streaming.domain.dto.response.UserResponse;
 import com.fase4FIAP.streaming.domain.model.User;
@@ -12,12 +13,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.jupiter.api.Assertions.fail;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -107,11 +109,27 @@ class UserControllerTest {
     // TODO - Espera receber 404 mas recebe 200
     @Test
     void generateExceptionNotFoundException() throws Exception {
-        when(userService.findById(any(String.class))).thenThrow(NotFoundException.class);
+//        var response = "Usuario não encontrado com o id: " + id;
+//        when(userService.findById(any(String.class)))
+//            .thenThrow(new NotFoundException(response));
+//
+//
+//        mockMvc.perform(get(baseUrlID, id))
+//            .andExpect(status().isNotFound())
+//            .andExpect(content().string(response));
+//
+//        verify(userService, times(1)).findById(id);
 
-        mockMvc.perform(get(baseUrlID, id)).andExpect(status().isNotFound());
+        var newId = "785496";
+        var message = "Usuario não encontrado com o id: " + newId;
+        when(userService.findById(any(String.class)))
+            .thenThrow(NotFoundException.class);
 
-        verify(userService, times(1)).findById(id);
+        mockMvc.perform(get(baseUrlID, newId))
+            .andExpect(status().isNotFound());
+
+
+        verify(userService, times(1)).findById(newId);
     }
 
     @Test

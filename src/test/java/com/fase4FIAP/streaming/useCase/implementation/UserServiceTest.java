@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-public class UserServiceTest {
+class UserServiceTest {
 
     final String id = "c1229ad8-e869-4cf0-bf1b-de193465248b";
 

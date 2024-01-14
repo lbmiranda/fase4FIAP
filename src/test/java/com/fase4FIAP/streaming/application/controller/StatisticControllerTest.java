@@ -2,6 +2,7 @@ package com.fase4FIAP.streaming.application.controller;
 
 import com.fase4FIAP.streaming.domain.dto.response.VideoStatisticResponse;
 import com.fase4FIAP.streaming.useCase.implementation.StatisticService;
+import com.fase4FIAP.streaming.useCase.implementation.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,11 +32,11 @@ class StatisticControllerTest {
     void setup(){
         mock = MockitoAnnotations.openMocks(this);
         StatisticController statisticController = new StatisticController(statisticService);
-        mockMvc = MockMvcBuilders.standaloneSetup(StatisticControllerTest.this.statisticService)
-                .addFilter((request, response, chain) -> {
-                    response.setCharacterEncoding("UTF-8");
-                    chain.doFilter(request, response);
-                }).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(statisticController)
+            .addFilter((request, response, chain) -> {
+                response.setCharacterEncoding("UTF-8");
+                chain.doFilter(request, response);
+            }).build();
     }
 
     @AfterEach
@@ -43,7 +44,7 @@ class StatisticControllerTest {
         mock.close();
     }
 
-    // TODO - Ainda pendente
+
     @Test
     void allowCalculateStatistic() throws Exception {
         var videoStatisticResponse = new VideoStatisticResponse(3L, 3L, 5);

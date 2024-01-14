@@ -2,7 +2,6 @@ package com.fase4FIAP.streaming.useCase.implementation;
 
 import com.fase4FIAP.streaming.application.exceptions.NotFoundException;
 import com.fase4FIAP.streaming.domain.dto.request.VideoRequest;
-import com.fase4FIAP.streaming.domain.dto.response.DeleteVideoResponse;
 import com.fase4FIAP.streaming.domain.dto.response.VideoUploadResponse;
 import com.fase4FIAP.streaming.domain.enums.Category;
 import com.fase4FIAP.streaming.domain.model.Video;
@@ -10,6 +9,7 @@ import com.fase4FIAP.streaming.domain.repository.FavoriteVideoRepository;
 import com.fase4FIAP.streaming.domain.repository.ReactiveVideoRepository;
 import com.fase4FIAP.streaming.domain.repository.VideoRepository;
 import com.fase4FIAP.streaming.useCase.contract.IVideoService;
+import com.fase4FIAP.streaming.utils.FavoriteVideoHelper;
 import com.fase4FIAP.streaming.utils.VideoHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,14 +27,12 @@ import reactor.test.StepVerifier;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-public class VideoServiceTest {
+class VideoServiceTest {
 
     final String videoId = "123ABC";
     final String userId = "987654";
@@ -102,16 +100,17 @@ public class VideoServiceTest {
 //        verify(reactiveVideoRepository, times(1)).save(video);
     }
 
-    // TODO - ainda pendente
     @Test
     void generateNotFoundExceptionFindById(){
+        when(reactiveVideoRepository.findById(any(String.class)))
+            .thenAnswer(invocation -> Mono.error(new NotFoundException("Vídeo não encontrado com ID: " + videoId)));
 
-        when(reactiveVideoRepository.findById(any(String.class))).thenReturn(Mono.error(new NotFoundException("Vídeo não encontrado com ID: " + videoId)));
+        var result = videoService.getVideoContent(videoId);
 
+        StepVerifier.create(result)
+            .expectError(NotFoundException.class)
+            .verify();
 
-        assertThatThrownBy(() -> videoService.getVideoContent(videoId + "123"))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessage("Vídeo não encontrado com ID: " + videoId);
         verify(reactiveVideoRepository, times(1)).findById(videoId);
     }
 
@@ -173,16 +172,25 @@ public class VideoServiceTest {
 
     @Test
     void allowFindByCategoryAndNotFavoritedByUser(){
-//        var category = Category.ENTERTAINMENT;
-//        var favoriteVideo1 = FavoriteVideoHelper.createFavoriteVideo();
-//        var favoriteVideo2 = FavoriteVideoHelper.createFavoriteVideo();
-//        var favoriteVideo3 = FavoriteVideoHelper.createFavoriteVideo();
-//        var listOfFavoritesVideos = Arrays.asList(favoriteVideo1, favoriteVideo2, favoriteVideo3);
-//        when(favoriteVideoRepository.findByUserId(any(String.class))).thenReturn(listOfFavoritesVideos);
+        var category = Category.ENTERTAINMENT;
+        var favoriteVideo1 = FavoriteVideoHelper.createFavoriteVideo();
+        var favoriteVideo2 = FavoriteVideoHelper.createFavoriteVideo();
+        var favoriteVideo3 = FavoriteVideoHelper.createFavoriteVideo();
+        var listOfFavoritesVideos = Arrays.asList(favoriteVideo1, favoriteVideo2, favoriteVideo3);
 
-//        var filter = videoService.findByCategoryAndNotFavoritedByUser(category, userId);
+        var video1 = VideoHelper.createVideo();
+        var video2 = VideoHelper.createVideo();
+        var video3 = VideoHelper.createVideo();
+        var listOfVideos = Arrays.asList(video1, video2, video3);
 
-        fail("Teste não implementado");
+        when(favoriteVideoRepository.findByUserId(any(String.class))).thenReturn(listOfFavoritesVideos);
+        when(reactiveVideoRepository.findByCategory(any(Category.class))).thenReturn(Flux.fromIterable(listOfVideos));
+
+        var filter = videoService.findByCategoryAndNotFavoritedByUser(category, userId);
+
+        assertThat(filter).isNotNull();
+        verify(favoriteVideoRepository, times(1)).findByUserId(userId);
+        verify(reactiveVideoRepository, times(1)).findByCategory(category);
     }
 
     @Test

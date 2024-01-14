@@ -8,10 +8,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-//@SpringBootTest
-//@AutoConfigureTestDatabase
-//@ActiveProfiles("test")
-//@Transactional
+
 @ExtendWith(MockitoExtension.class)
 @DataMongoTest
 class UserRepositoryIT {

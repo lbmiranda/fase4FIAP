@@ -1,7 +1,5 @@
 package com.fase4FIAP.streaming.application.controller;
 
-import com.fase4FIAP.streaming.domain.dto.request.FavoriteVideoRequest;
-import com.fase4FIAP.streaming.useCase.implementation.FavoriteVideoService;
 import com.fase4FIAP.streaming.useCase.implementation.RecommendationVideoService;
 import com.fase4FIAP.streaming.utils.VideoHelper;
 import org.junit.jupiter.api.AfterEach;
@@ -15,18 +13,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static reactor.core.publisher.Mono.when;
 
 class RecommendationVideoControllerTest {
 
     final String baseUrl = "/video-recommendation";
-    final String baseUrlID = "/video-recommendation/{id}";
 
     final String userId = "987654";
 
