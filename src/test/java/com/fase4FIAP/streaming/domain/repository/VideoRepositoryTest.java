@@ -30,8 +30,7 @@ class VideoRepositoryTest {
     void tearDown() throws Exception {
         openMocks.close();
     }
-
-
+    
     @Test
     void allowFindAllVideos() {
         var video1 = VideoHelper.createVideo();

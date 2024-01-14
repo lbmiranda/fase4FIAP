@@ -46,28 +46,27 @@ class UserRepositoryTest {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
-    // TODO - Também fazer o teste em relação ao update
-//    @Test
-//    void allowUpdateUser(){
-//        var userOld = UserHelper.createUser();
-//        userOld.setId(id);
-//
-//        var userNew = new User();
-//        userNew.setId(userNew.getId());
-//        userNew.setName(userOld.getName());
-//        userNew.setEmail(userOld.getEmail());
-//        userNew.setPassword(userNew.getPassword());
-//
-//        when(userRepository.findById(id)).thenReturn(Optional.of(userOld));
-//        when(userRepository.save(any(User.class))).thenAnswer(item -> item.getArgument(0));
-//
-//        var userFinal = userRepository.save(userNew);
-//
-//        assertThat(userFinal).isInstanceOf(User.class).isNotNull();
-//        verify(userRepository, times(1)).findById(any(String.class));
-//        verify(userRepository, times(1)).save(any(User.class));
-//
-//    }
+
+    @Test
+    void allowUpdateUser(){
+        var user = UserHelper.createUser();
+        var newId = "123ABC";
+        user.setId(newId);
+        user.setEmail("email_alterado@hotmail.com");
+        user.setName("USER_UPDATE");
+
+        when(userRepository.save(any(User.class))).thenAnswer(item -> item.getArgument(0));
+
+        var userUpdate = userRepository.save(user);
+
+        assertThat(userUpdate).isInstanceOf(User.class).isNotNull();
+        assertThat(userUpdate.getId()).isEqualTo(newId);
+        assertThat(userUpdate.getName()).isEqualTo(user.getName());
+        assertThat(userUpdate.getEmail()).isEqualTo(user.getEmail());
+        assertThat(userUpdate.getPassword()).isEqualTo(user.getPassword());
+        verify(userRepository, times(1)).save(any(User.class));
+
+    }
 
     @Test
     void allowDeleteByIdUser() {
