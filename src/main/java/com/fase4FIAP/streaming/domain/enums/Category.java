@@ -1,5 +1,10 @@
 package com.fase4FIAP.streaming.domain.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum Category {
 
     MUSIC("Music"),
@@ -12,10 +17,6 @@ public enum Category {
 
     private final String categoryName;
 
-    Category(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
     public static Category fromString(String text) {
         String textFormat = text.trim();
         for (Category category : Category.values()) {
@@ -26,7 +27,5 @@ public enum Category {
         throw new IllegalArgumentException("Categoria não reconhecida: " + textFormat);
     }
 
-    public String getCategoryName() {
-        return categoryName;
-    }
+
 }
