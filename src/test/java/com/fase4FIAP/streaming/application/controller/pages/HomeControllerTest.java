@@ -25,7 +25,6 @@ class HomeControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    // TODO - verificar problema ao acessar rota.
     @Test
     void allowFavoriteVideo() throws Exception {
         mockMvc.perform(get(baseUrl)).andExpect(status().isOk());

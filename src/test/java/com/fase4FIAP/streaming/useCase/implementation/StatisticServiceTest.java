@@ -50,6 +50,7 @@ class StatisticServiceTest {
         statisticService = new StatisticService(videoService, favoriteVideoService);
     }
 
+    // TODO -  Resolver allowPreviewAverage para depois testar
     @Test
     void allowCalculateStatistic(){
         fail("Teste não implementado.");
