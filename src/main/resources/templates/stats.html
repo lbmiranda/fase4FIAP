@@ -51,12 +51,14 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        fetch('/estatisticas')
+        fetch('/statistic')
             .then(response => response.json())
             .then(data => {
+
+
                 document.getElementById('totalVideos').textContent = data.totalVideos;
                 document.getElementById('totalFavorites').textContent = data.totalFavorites;
-                document.getElementById('previewAverage').textContent = data.previewAverages.toFixed(2);
+                document.getElementById('previewAverage').textContent = data.previewAverage.toFixed(2);
             })
             .catch(error => {
                 console.error('Erro ao buscar estatísticas:', error);
