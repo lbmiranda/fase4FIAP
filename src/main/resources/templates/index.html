@@ -124,7 +124,7 @@
 
     <form id="uploadForm" enctype="multipart/form-data">
         <label for="videoFile" class="form-label">Selecione um vídeo para carregar:</label>
-        <input type="file" id="videoFile" name="file" accept="video/*" required class="form-control">
+        <input onchange="addFileName()" type="file" id="videoFile" name="file" accept="video/*" required class="form-control">
         <br>
         <label for="fileName" class="form-label">Nome do arquivo:</label>
         <input type="text" id="fileName" name="fileName" required class="form-control">
@@ -495,6 +495,12 @@
         document.getElementById('firstPageButton').disabled = currentPage <= 0;
         document.getElementById('nextPageButton').disabled = currentPage >= totalPages - 1;
         document.getElementById('lastPageButton').disabled = currentPage >= totalPages - 1;
+    }
+
+    function addFileName(){
+        const fileName = document.getElementById('fileName');
+        const videoFile = document.getElementById('videoFile');
+        fileName.value = videoFile.value.split("\\")[2].split(".")[0]
     }
 
 </script>
