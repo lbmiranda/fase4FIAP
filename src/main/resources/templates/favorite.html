@@ -52,7 +52,7 @@
             return;
         }
 
-        fetch('/favorites-videos/?userId=' + userId)
+        fetch('/favorites-videos?userId=' + userId)
             .then(response => response.json())
             .then(favorites => {
                 const favoritesDiv = document.getElementById('favoritesList');
