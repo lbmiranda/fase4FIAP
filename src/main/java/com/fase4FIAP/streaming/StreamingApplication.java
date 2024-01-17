@@ -10,4 +10,8 @@ public class StreamingApplication {
         SpringApplication.run(StreamingApplication.class, args);
     }
 
+    static void runApplication(Class<?> applicationClass, String[] args) {
+        SpringApplication.run(applicationClass, args);
+    }
+
 }
