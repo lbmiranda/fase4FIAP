@@ -10,6 +10,7 @@ import com.fase4FIAP.streaming.domain.repository.VideoRepository;
 import com.fase4FIAP.streaming.useCase.contract.IStatisticService;
 import com.fase4FIAP.streaming.utils.FavoriteVideoHelper;
 import com.fase4FIAP.streaming.utils.VideoHelper;
+import com.jayway.jsonpath.internal.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,11 +19,14 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class StatisticServiceTest {
@@ -109,4 +113,22 @@ class StatisticServiceTest {
 //
 //
 //    }
+
+    private <T> T invokePrivateMethod(Object target, String methodName, Object... args) {
+        try {
+            Class<?>[] parameterTypes = new Class[args.length];
+            for (int i = 0; i < args.length; i++) {
+                parameterTypes[i] = args[i].getClass();
+            }
+
+            Method method = target.getClass().getDeclaredMethod(methodName, parameterTypes);
+            method.setAccessible(true);
+
+            return (T) method.invoke(target, args);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("Failed to invoke private method: " + methodName, e);
+        }
+    }
+
+
 }
