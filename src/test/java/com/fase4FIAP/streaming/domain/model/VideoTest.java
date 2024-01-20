@@ -2,11 +2,9 @@ package com.fase4FIAP.streaming.domain.model;
 
 import com.fase4FIAP.streaming.domain.dto.request.VideoRequest;
 import com.fase4FIAP.streaming.domain.enums.Category;
-import com.fase4FIAP.streaming.utils.UserHelper;
 import com.fase4FIAP.streaming.utils.VideoHelper;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class VideoTest {
 
     @Test
-    void allowConvertVideo() throws IOException {
+    void allowConvertVideo(){
         String title = "Breaking Bad";
         String description = "Piloto";
         String fileName = "breaking_bad.mp4";
@@ -113,6 +111,7 @@ class VideoTest {
             .build();
 
         assertThat(video).isEqualTo(anotherVideo);
+        assertEquals(video.hashCode(), anotherVideo.hashCode());
     }
 
     @Test
@@ -128,7 +127,7 @@ class VideoTest {
             .view(0L)
             .build();
 
-        assertThat(video.toString()).isEqualTo("Video(videoId=123ABC, title=Breaking Bad, description=Pilote, videoData=[98, 114, 101, 97, 107, 105, 110, 103, 95, 98, 97, 100, 46, 109, 112, 52], fileName=breaking_bad, publicationDate=2008-01-20, category=ENTERTAINMENT, view=0)");
+        assertThat(video.toString()).hasToString("Video(videoId=123ABC, title=Breaking Bad, description=Pilote, videoData=[98, 114, 101, 97, 107, 105, 110, 103, 95, 98, 97, 100, 46, 109, 112, 52], fileName=breaking_bad, publicationDate=2008-01-20, category=ENTERTAINMENT, view=0)");
 
     }
 }

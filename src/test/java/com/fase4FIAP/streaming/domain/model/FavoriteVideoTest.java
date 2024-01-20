@@ -5,7 +5,6 @@ import com.fase4FIAP.streaming.utils.FavoriteVideoHelper;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,6 +64,7 @@ class FavoriteVideoTest {
         .build();
 
     assertThat(favoriteVideo).isEqualTo(anotherFavoriteVideo);
+    assertEquals(favoriteVideo.hashCode(), anotherFavoriteVideo.hashCode());
   }
 
   @Test
@@ -78,7 +78,7 @@ class FavoriteVideoTest {
 
     var now = LocalDate.now();
 
-    assertThat(favoriteVideo.toString()).isEqualTo("FavoriteVideo(id=123ABC, userId=987654, videoId=123456, creationDate="+now+")");
+    assertThat(favoriteVideo.toString()).hasToString("FavoriteVideo(id=123ABC, userId=987654, videoId=123456, creationDate="+now+")");
   }
 
 

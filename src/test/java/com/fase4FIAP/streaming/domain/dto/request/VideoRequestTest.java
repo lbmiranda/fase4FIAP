@@ -1,8 +1,7 @@
 package com.fase4FIAP.streaming.domain.dto.request;
 
 import com.fase4FIAP.streaming.domain.enums.Category;
-import com.fase4FIAP.streaming.domain.model.FavoriteVideo;
-import com.fase4FIAP.streaming.domain.model.Video;
+
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -87,6 +86,31 @@ class VideoRequestTest {
         .build();
 
     assertThat(video).isEqualTo(anotherVideo);
+  }
+
+  @Test
+  void allowVideoRequestNoArgsConstructor(){
+    var videoRequest = new VideoRequest();
+
+    assertThat(videoRequest.getTitle()).isNull();
+    assertThat(videoRequest.getFileName()).isNull();
+    assertThat(videoRequest.getPublicationDate()).isNull();
+    assertThat(videoRequest.getCategory()).isNull();
+    assertThat(videoRequest.getFavorite()).isNull();
+  }
+
+  @Test
+  void allowBuilderToString(){
+    var video = VideoRequest.builder()
+        .title("Breaking Bad")
+        .description("Pilote")
+        .fileName("breaking_bad")
+        .publicationDate(LocalDate.of(2008,1,20).toString())
+        .category(Category.ENTERTAINMENT.toString())
+        .build();
+
+    assertThat(video.toString()).hasToString("VideoRequest(title=Breaking Bad, description=Pilote, fileName=breaking_bad, publicationDate=2008-01-20, category=ENTERTAINMENT, favorite=null)");
+
   }
 
 

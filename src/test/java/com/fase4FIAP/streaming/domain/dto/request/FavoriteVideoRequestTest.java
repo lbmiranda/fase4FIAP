@@ -1,6 +1,7 @@
 package com.fase4FIAP.streaming.domain.dto.request;
 
-import lombok.Getter;
+import com.fase4FIAP.streaming.domain.enums.Category;
+import com.fase4FIAP.streaming.domain.model.Video;
 import org.junit.jupiter.api.Test;
 
 
@@ -28,9 +29,10 @@ class FavoriteVideoRequestTest {
 
   @Test
   void allowEquals(){
-     var favoriteVideo = generateVideoRequest();
+     var favoriteVideo1 = generateVideoRequest();
+     var favoriteVideo2 = generateVideoRequest();
 
-    assertThat(favoriteVideo.equals(favoriteVideo)).isTrue();
+    assertThat(favoriteVideo1.equals(favoriteVideo2)).isTrue();
   }
 
   @Test
@@ -39,4 +41,6 @@ class FavoriteVideoRequestTest {
     String expectedString = "FavoriteVideoRequest(userId=123ABC, videoId=456ABC, creationDate="+now+")";
     assertEquals(expectedString, generateVideoRequest().toString());
   }
+
+
 }

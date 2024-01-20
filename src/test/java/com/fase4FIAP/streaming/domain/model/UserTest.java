@@ -61,6 +61,8 @@ class UserTest {
             .build();
 
         assertThat(user).isEqualTo(anotherUser);
+        assertEquals(user.hashCode(), anotherUser.hashCode());
+
     }
 
     @Test
@@ -72,7 +74,7 @@ class UserTest {
             .password("25d55ad283aa400af464c76d713c07ad")
             .build();
 
-        assertThat(user.toString()).isEqualTo("User(id=123ABC, name=USER_ROLLER, email=contato@hotmail.com, password=25d55ad283aa400af464c76d713c07ad)");
+        assertThat(user.toString()).hasToString("User(id=123ABC, name=USER_ROLLER, email=contato@hotmail.com, password=25d55ad283aa400af464c76d713c07ad)");
     }
 
 }

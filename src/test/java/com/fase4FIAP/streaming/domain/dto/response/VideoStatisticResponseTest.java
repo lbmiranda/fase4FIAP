@@ -2,6 +2,7 @@ package com.fase4FIAP.streaming.domain.dto.response;
 
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VideoStatisticResponseTest {
@@ -25,6 +26,15 @@ class VideoStatisticResponseTest {
   void allowToString(){
     String expectedString = "VideoStatisticResponse(totalVideos=3, totalFavorites=3, previewAverage=5.0)";
     assertEquals(expectedString, generateVideoStatisticResponse().toString());
+  }
+
+  @Test
+  void allowVideoStatisticResponseNoArgsConstructor(){
+    var videoStatistic = new VideoStatisticResponse();
+
+    assertThat(videoStatistic.getTotalVideos()).isZero();
+    assertThat(videoStatistic.getTotalFavorites()).isZero();
+    assertThat(videoStatistic.getPreviewAverage()).isZero();
   }
 
 }
